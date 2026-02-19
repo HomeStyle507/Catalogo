@@ -17,10 +17,112 @@
 
 <body>
 
-<header role="banner">
-  <h1>HOME STYLE <span aria-label="Número 507">507</span></h1>
-  <p class="header-tagline">Lo mejor para tu Hogar y a tu Estilo</p>
+<header role="banner" class="main-header">
+  <div class="header-container">
+    <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+    
+    <div class="header-brand">
+      <img src="img/logo/logo.svg" alt="Home Style 507 Logo" class="logo-img">
+      <div class="brand-text">
+        <h1>HOME STYLE <span aria-label="Número 507">507</span></h1>
+        <p class="header-tagline">Lo mejor para tu Hogar y a tu Estilo</p>
+      </div>
+    </div>
+    
+    <div class="header-actions">
+      <button id="searchToggle" class="icon-button" aria-label="Abrir búsqueda">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
 </header>
+
+<!-- Menú lateral -->
+<aside id="sideMenu" class="side-menu" role="navigation" aria-label="Menú principal">
+  <div class="side-menu-header">
+    <img src="img/logo/logo.svg" alt="Logo" class="side-menu-logo">
+    <button id="menuClose" class="menu-close" aria-label="Cerrar menú">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  
+  <div class="side-menu-content">
+    <div class="menu-section">
+      <h3 class="menu-section-title">Accesos Rápidos</h3>
+      <ul class="menu-list">
+        <li><a href="#" data-category="Promociones" class="menu-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+          Promociones
+        </a></li>
+        <li><a href="#" data-category="Novedades" class="menu-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+          Novedades
+        </a></li>
+        <li><a href="#" data-category="Todos" class="menu-link active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Ver Todo
+        </a></li>
+      </ul>
+    </div>
+    
+    <div class="menu-section">
+      <h3 class="menu-section-title">Categorías Principales</h3>
+      <ul class="menu-list">
+        <li><a href="#" data-category="Forros" class="menu-link">Forros de Sofá</a></li>
+        <li><a href="#" data-category="Sábanas" class="menu-link">Sábanas</a></li>
+        <li><a href="#" data-category="Cortinas" class="menu-link">Cortinas</a></li>
+        <li><a href="#" data-category="Comedor" class="menu-link">Comedor</a></li>
+        <li><a href="#" data-category="Alfombras" class="menu-link">Alfombras</a></li>
+      </ul>
+    </div>
+    
+    <div class="menu-section">
+      <h3 class="menu-section-title">Más Categorías</h3>
+      <ul class="menu-list">
+        <li><a href="#" data-category="Almohadas" class="menu-link">Almohadas</a></li>
+        <li><a href="#" data-category="Frazadas" class="menu-link">Frazadas</a></li>
+        <li><a href="#" data-category="Toallas" class="menu-link">Toallas</a></li>
+        <li><a href="#" data-category="Baño" class="menu-link">Baño</a></li>
+        <li><a href="#" data-category="Perfumes" class="menu-link">Perfumes</a></li>
+        <li><a href="#" data-category="Electrónicos" class="menu-link">Electrónicos</a></li>
+        <li><a href="#" data-category="Accesorios" class="menu-link">Accesorios</a></li>
+        <li><a href="#" data-category="Mochilas" class="menu-link">Mochilas</a></li>
+        <li><a href="#" data-category="Carteras" class="menu-link">Carteras</a></li>
+        <li><a href="#" data-category="Otros" class="menu-link">Otros</a></li>
+      </ul>
+    </div>
+    
+    <div class="menu-section">
+      <h3 class="menu-section-title">Contacto</h3>
+      <ul class="menu-list">
+        <li><a href="https://wa.me/50769778350" target="_blank" class="menu-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a></li>
+        <li><a href="https://www.instagram.com/homeystyle507/" target="_blank" class="menu-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          Instagram
+        </a></li>
+        <li><a href="https://www.tiktok.com/@homeystyle507" target="_blank" class="menu-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+          TikTok
+        </a></li>
+      </ul>
+    </div>
+  </div>
+</aside>
+
+<div id="menuOverlay" class="menu-overlay"></div>
 
 <div class="search-box">
   <input id="search" type="search" placeholder="Buscar productos..." aria-label="Buscador de productos" aria-describedby="search-hint">
@@ -55,23 +157,431 @@
 <article class="card" 
     data-nombre="Forros de Sillón Acolchonados Pasión Guajira (Modelo 3-2-1)" 
     data-descripcion="Forros de sillones Modelo 3-2-1, poliéster acolchonado, sin rucha, ajustables para sillones individuales y tipo L. Forro de sillones de la marca Pasión Guajira en varios colores disponibles. Calidad premium de los más confortables con elástico grueso en la parte de abajo, tubos de polifón dentro del paquete, y ajustables para diversos modelos." 
-    data-precio="$37.45" 
+    data-precio="$42.80" 
     data-images="img/forros/02/1.jpeg,img/forros/02/2.jpeg,img/forros/02/3.jpeg,img/forros/02/4.jpeg,img/forros/02/5.jpeg,img/forros/02/6.jpeg,img/forros/02/7.jpeg,img/forros/02/8.jpeg,img/forros/02/9.jpeg">
     <img src="img/forros/02/1.jpeg" alt="Forros de Sillón Acolchonados Pasión Guajira (Modelo 3-2-1)" loading="lazy">
     <div class="card-info">
-        <h3>Forros Sillón Acolchonados</h3>
+        <h3>Forros Sillón Acolchonados 321</h3>
         <button onclick="toggleProducto(this)">Consultar</button>
     </div>
 </article>
 
   <article class="card" 
     data-nombre="Forro de Sillón L Corrugado Calidad Premium (Ref. COVER-L)" 
-    data-descripcion="Renueva y protege tu hogar con este cobertor de sofá elástico de la marca Royale San Marty, diseñado con un elegante faldón plisado y una textura corrugada que garantiza 100% de comodidad. Este protector de alta calidad es ideal para sofás tipo L de 1 puesto con largo ajustable de 3.5 a 4.5 metros. Su tejido elástico se adapta perfectamente a la silueta del mueble, brindando un aspecto renovado y sofisticado a cualquier sala. Solución práctica, suave al tacto y fácil de instalar para resguardar tus muebles del desgaste, manchas y mascotas." 
+    data-descripcion="Cobertor de sofá tipo L Royale San Marty con faldón plisado y textura corrugada premium. Largo ajustable 3.5-4.5 metros. Tejido elástico suave que se adapta perfectamente, protegiendo del desgarre, manchas y mascotas. Instalación fácil. Renueva tu sala con elegancia y sofisticación." 
     data-precio="$32.10" 
     data-images="img/forros/03/1.jpeg,img/forros/03/2.jpeg,img/forros/03/3.jpeg,img/forros/03/4.jpeg,img/forros/03/5.jpeg,img/forros/03/6.jpeg,img/forros/03/7.jpeg,img/forros/03/8.jpeg">
     <img src="img/forros/03/1.jpeg" alt="Forro de Sillón L Corrugado Calidad Premium" loading="lazy">
     <div class="card-info">
         <h3>Forro Sillón L Corrugado Premium</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Corrugado Unicolor" 
+    data-descripcion="Protege tu sofá individual con este forro corrugado de textura robusta y elegante. Material unicolor disponible en múltiples tonos neutros. Ajuste perfecto con elástico reforzado para máxima seguridad. Fácil de lavar y de larga durabilidad probada. Transforma tu sala instantáneamente con protección máxima. Ideal para hogares con mascotas o niños pequeños. Disponible limitado." 
+    data-precio="$32.10" 
+    data-images="img/forros/04/1.jpeg,img/forros/04/2.jpeg">
+    <img src="img/forros/04/1.jpeg" alt="Forro Sofá 311 Corrugado Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro Sofá 311 Corrugado Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card agotado" 
+    data-nombre="Forro Sofá 321 Corrugado Unicolor" 
+    data-descripcion="Cubre tu sofá de 2-3 puestos con este forro corrugado premium de textura elegante. Material unicolor minimalista que combina con cualquier decoración moderna. Elástico ajustable para encaje perfecto y resistencia a movimientos. Resistente a desgarre y manchas difíciles. Transforma tu salón instantáneamente. Material duradero." 
+    data-precio="$32.10" 
+    data-images="img/forros/05/1.jpeg,img/forros/05/2.jpeg">
+    <img src="img/forros/05/1.jpeg" alt="Forro Sofá 321 Corrugado Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro Sofá 321 Corrugado Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá L Corrugado Unicolor" 
+    data-descripcion="Forro seccional tipo L con textura corrugada elegante y sofisticada. Cobertura completa para sofás angulados de tamaño grande. Unicolor sofisticado en paleta neutral que combina todo. Material resistente y de larga vida útil garantizada. Elástico de calidad que mantiene forma perfecta. Proteción contra desgaste, manchas y mascotas. Renovación completa de tu espacio actual." 
+    data-precio="$32.10" 
+    data-images="img/forros/06/1.jpeg,img/forros/06/2.jpeg">
+    <img src="img/forros/06/1.jpeg" alt="Forro Sofá L Corrugado Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro Sofá L Corrugado Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Corrugado Textura Unicolor" 
+    data-descripcion="Sofá individual merece protección con estilo y textura moderna. Forro con corrugado y patrón visual dinámico que oculta imperfecciones. Unicolor elegante disponible en varios tonos coordinados. Elasticidad perfecta para encaje hermético y seguro. Material transpirable que evita humedad y ácaros. Durabilidad garantizada por fabricante. Instalación rápida y sencilla sin herramientas." 
+    data-precio="$26.75" 
+    data-images="img/forros/07/1.jpeg,img/forros/07/2.jpeg">
+    <img src="img/forros/07/1.jpeg" alt="Forro Sofá 311 Corrugado Textura Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro Sofá 311 Corrugado Textura Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card agotado" 
+    data-nombre="Forro Sofá 321 Corrugado Textura Unicolor" 
+    data-descripcion="Protección total para sofá grande 2-3 puestos con textura corrugada avanzada. Diseño que disimula marcas y suciedad visible. Colores unicolores coordinados con hogares modernos y contemporáneos. Elástico reforzado para máximo ajuste y permanencia. Fácil mantenimiento y lavado frecuente sin daño. Material que respira y previene ácaros. Seguridad y estilo en uno solo." 
+    data-precio="$26.75" 
+    data-images="img/forros/08/1.jpeg,img/forros/08/2.jpeg">
+    <img src="img/forros/08/1.jpeg" alt="Forro Sofá 321 Corrugado Textura Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro Sofá 321 Corrugado Textura Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá L Corrugado Textura Unicolor" 
+    data-descripcion="Forro seccional L con textura corrugada sofisticada y moderna. Cobertura integral para sofás angulados grandes. Diseño unicolor elegante y atemporal que perdura. Material resistente a uso intenso y diario. Elástico multicapa para permanencia perfecta sin deslices. Protección contra desgarre y manchas persistentes. Transformación instantánea de salas grandes y amplias." 
+    data-precio="$26.75" 
+    data-images="img/forros/09/1.jpeg,img/forros/09/2.jpeg">
+    <img src="img/forros/09/1.jpeg" alt="Forro Sofá L Corrugado Textura Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro Sofá L Corrugado Textura Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Corrugado Royale Unicolor" 
+    data-descripcion="Calidad Royale para tu sofá individual de 1 puesto. Forro corrugado con toque premium y sofisticado reconocido. Textura que añade profundidad visual y elegancia. Unicolor en tonos nobles y ricos con variedad. Elasticidad superior que no pierde forma ni resistencia. Material de alta resistencia y durabilidad. Protección integral contra daños y desgarre diario. Elegancia que dura años sin decolorarse." 
+    data-precio="$32.10" 
+    data-images="img/forros/10/1.jpeg,img/forros/10/2.jpeg">
+    <img src="img/forros/10/1.jpeg" alt="Forro Sofá 311 Corrugado Royale Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro Sofá 311 Corrugado Royale Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card agotado" 
+    data-nombre="Forro Sofá 321 Corrugado Royale Unicolor" 
+    data-descripcion="Sofá 2-3 puestos merece forro Royale de máxima calidad. Textura corrugada de marca Royale reconocida internacionalmente. Calidad premium visible en cada detalle y costura. Unicolor sofisticado que rejuvenece espacios y ambientes. Elasticidad licra que resiste uso continuo e intenso. Proteción máxima contra desgarre y daño. Material importado de excelencia probada." 
+    data-precio="$32.10" 
+    data-images="img/forros/11/1.jpeg,img/forros/11/2.jpeg">
+    <img src="img/forros/11/1.jpeg" alt="Forro Sofá 321 Corrugado Royale Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro Sofá 321 Corrugado Royale Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Licra con Rucha Unicolor" 
+    data-descripcion="Toque elegante con rucha decorativa integrada. Forro licra suave al tacto para sofá individual de 1 puesto. Unicolor disponible en amplia gama de colores coordin ados. Rucha elegante que añade sofisticación visual inmediata. Elasticidad licra que se adapta perfectamente sin deslizar. Fácil limpieza y mantenimiento diario sin problemas. Material transpirable de calidad premium. Confort y belleza combinados en uno." 
+    data-precio="$32.10" 
+    data-images="img/forros/12/1.jpeg,img/forros/12/2.jpeg">
+    <img src="img/forros/12/1.jpeg" alt="Forro Sofá 311 Licra con Rucha Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro Sofá 311 Licra con Rucha Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 321 Licra con Rucha Unicolor" 
+    data-descripcion="Sofá 2-3 puestos con rucha elegante y protección máxima. Material licra suave de premium calidad y elasticidad. Rucha decorativa que enhance la belleza del conjunto. Unicolor en colores que combinan todo tipo decoración. Elasticidad perfecta para ajuste hermético y seguro. Resistencia a uso diario intenso sin rasgarse. Transformación visual garantizada del ambiente. Disponible ahora en stock limitado." 
+    data-precio="$32.10" 
+    data-images="img/forros/13/1.jpeg,img/forros/13/2.jpeg">
+    <img src="img/forros/13/1.jpeg" alt="Forro Sofá 321 Licra con Rucha Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro Sofá 321 Licra con Rucha Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Licra con Rucha Estampado + Cortinas BH" 
+    data-descripcion="Juego coordinado: forro licra individual + cortinas blackout 54x90. Estampado elegante que combina perfectamente en conjunto. Rucha decorativa que acentúa diseño y coordina. Licra suave de máxima calidad premium actual. Cortinas blackout que complementan protección del sol. Conjunto promocional con excelente relación precio-valor. Renovación total de sala con coordinación perfecta. Disponible en cantidad limitada para oferta especial." 
+    data-precio="$42.80" 
+    data-images="img/forros/14/1.jpeg,img/forros/14/2.jpeg,img/forros/14/3.jpeg,img/forros/14/4.jpeg,img/forros/14/5.jpeg,img/forros/14/6.jpeg,img/forros/14/7.jpeg,img/forros/14/8.jpeg,img/forros/14/9.jpeg,img/forros/14/10.jpeg,img/forros/14/11.jpeg,img/forros/14/12.jpeg,img/forros/14/13.jpeg,img/forros/14/14.jpeg,img/forros/14/15.jpeg,img/forros/14/16.jpeg,img/forros/14/17.jpeg">
+    <img src="img/forros/14/1.jpeg" alt="Forro Sofá 311 Licra con Rucha Estampado + Cortinas BH" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 311 Licra + Cortinas BH</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 321 Licra con Rucha Estampado + Cortinas BH" 
+    data-descripcion="Protección y decoración complete para sofá 2-3 puestos grande. Licra premium + cortinas blackout estampadas coordinadas. Diseño coordinado y sofisticado que se complementa. Rucha elegante en ambas piezas del conjunto. Patrón estampado moderno y atractivo visualmente. Elasticidad perfecta en forro sin deslizar. Cortinas que bloquean luz total para privacidad. Transformación espacio integral. Disponible ahora en cantidad limitada." 
+    data-precio="$42.80" 
+    data-images="img/forros/14/1.jpeg,img/forros/14/2.jpeg,img/forros/14/3.jpeg,img/forros/14/4.jpeg,img/forros/14/5.jpeg,img/forros/14/6.jpeg,img/forros/14/7.jpeg,img/forros/14/8.jpeg,img/forros/14/9.jpeg,img/forros/14/10.jpeg,img/forros/14/11.jpeg,img/forros/14/12.jpeg,img/forros/14/13.jpeg,img/forros/14/14.jpeg,img/forros/14/15.jpeg,img/forros/14/16.jpeg,img/forros/14/17.jpeg">
+    <img src="img/forros/14/7.jpeg" alt="Forro Sofá 321 Licra con Rucha Estampado + Cortinas BH" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Licra + Cortinas BH</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Licra con Rucha Estampado + Cortinas HH" 
+    data-descripcion="Sofá individual protegido con estampado moderno y cortinas. Forro licra + cortinas para habitación coordinadas. Rucha decorativa integrada en ambas piezas. Patrón estampado contemporáneo y elegante actual. Colores coordinados para armonia visual del espacio. Elasticidad licra premium sin plagiar. Cortinas habitación para privacidad y ocultamiento. Conjunto integral decorativo y funcional. Disponible ahora en stock completo." 
+    data-precio="$42.80" 
+    data-images="img/forros/14/1.jpeg,img/forros/14/2.jpeg,img/forros/14/3.jpeg,img/forros/14/4.jpeg,img/forros/14/5.jpeg,img/forros/14/6.jpeg,img/forros/14/7.jpeg,img/forros/14/8.jpeg,img/forros/14/9.jpeg,img/forros/14/10.jpeg,img/forros/14/11.jpeg,img/forros/14/12.jpeg,img/forros/14/13.jpeg,img/forros/14/14.jpeg,img/forros/14/15.jpeg,img/forros/14/16.jpeg,img/forros/14/17.jpeg">
+      <img src="img/forros/14/13.jpeg" alt="Forro Sofá 311 Licra con Rucha Estampado + Cortinas HH" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 311 Licra + Cortinas HH</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 321 Licra con Rucha Estampado + Cortinas HH" 
+    data-descripcion="Protección sofá 2-3 puestos más cortinas habitación HH. Licra con rucha elegante y decorativa integrada. Estampado moderno que renueva ambientes completos. Cortinas para cuarto coordinadas con forro. Material licra de excelencia y durabilidad. Elasticidad y resistencia combinadas en conjunto. Decoración integral del hogar completo. Stock limitado disponible. Disponible ya con envío rápido." 
+    data-precio="$42.80" 
+    data-images="img/forros/14/1.jpeg,img/forros/14/2.jpeg,img/forros/14/3.jpeg,img/forros/14/4.jpeg,img/forros/14/5.jpeg,img/forros/14/6.jpeg,img/forros/14/7.jpeg,img/forros/14/8.jpeg,img/forros/14/9.jpeg,img/forros/14/10.jpeg,img/forros/14/11.jpeg,img/forros/14/12.jpeg,img/forros/14/13.jpeg,img/forros/14/14.jpeg,img/forros/14/15.jpeg,img/forros/14/16.jpeg,img/forros/14/17.jpeg">
+    <img src="img/forros/14/19.jpeg" alt="Forro Sofá 321 Licra con Rucha Estampado + Cortinas HH" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Licra + Cortinas HH</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 321 Licra sin Rucha Estampado Royal San" 
+    data-descripcion="Forro sofá 321 con estampado Royal San reconocido. Línea sin rucha para design o minimalista y limpio. Material licra suave de máxima calidad y elegancia. Patrón estampado marca Royal San distinguida. Elasticidad perfecta sin accesorios adicionales. Proteción contra desgarre y manchas persistentes. Elegancia minimalista que nunca pasa moda. Disponible ya con stock completo en almacén." 
+    data-precio="$32.10" 
+    data-images="img/forros/18/1.jpeg,img/forros/18/2.jpeg">
+    <img src="img/forros/18/1.jpeg" alt="Forro Sofá 321 Licra sin Rucha Estampado Royal San" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Licra Royal San</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá L Licra sin Rucha Estampado Royal San (2 Piezas)" 
+    data-descripcion="Seccional L con estampado Royal San en 2 piezas separadas. Cobertura integral para sofás angulados sin rucha. Licra suave de máxima calidad y elasticidad superior. Patrón estampado que distingue y sofistica ambientes. Material que repele manchas y es fácil limpiar. Elasticidad superior para permanencia perfecta. Protección completa para sofás L grandes. Disponible ahora con entrega rápida." 
+    data-precio="$32.10" 
+    data-images="img/forros/19/1.jpeg,img/forros/19/2.jpeg">
+    <img src="img/forros/19/1.jpeg" alt="Forro Sofá L Licra sin Rucha Royal San (2 Piezas)" loading="lazy">
+    <div class="card-info">
+        <h3>Forro L Licra Royal San (2 Piezas)</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Licra con Rucha Estampado Royal" 
+    data-descripcion="Forro individual con rucha elegante integrada. Estampado royal en licra premium de calidad. Patrón distinguido royal que añade clase al espacio. Rucha que enmarcan el diseño y complementan. Material licra suave y de fácil mantenimiento. Elasticidad perfecta para ajuste hermético completo. Durabilidad probada por años de uso. Disponible stock completo en variedad colores." 
+    data-precio="$26.75" 
+    data-images="img/forros/20/1.jpeg,img/forros/20/2.jpeg">
+    <img src="img/forros/20/1.jpeg" alt="Forro Sofá 311 Licra con Rucha Estampado Royal" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 311 Licra Estampado Royal</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 321 Licra con Rucha Estampado Royal" 
+    data-descripcion="Sofá 2-3 puestos con estampado royal y rucha elegante. Licra de calidad premium de fabricante reconocido. Patrón estampado royal sofisticado y atractivo. Colores ricos y duraderos que se mantienen. Elasticidad y confort combinados en material. Protección duradera contra daño y desgarre. Stock disponible ahora con descuento especial." 
+    data-precio="$26.75" 
+    data-images="img/forros/21/1.jpeg,img/forros/21/2.jpeg">
+    <img src="img/forros/21/1.jpeg" alt="Forro Sofá 321 Licra con Rucha Estampado Royal" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Licra Estampado Royal</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá L Licra con Rucha Estampado Royal (1 Pieza)" 
+    data-descripcion="Seccional L monolítica con rucha decorativa integrada. Estampado royal couture en una sola pieza completa. Licra premium suave de máxima calidad. Patrón distinguido royal que sofistica. Rucha continua en borde enfatiza elegancia. Cobertura perfecta angular para sofás L. Disponible ya en cantidad limitada oferta especial." 
+    data-precio="$26.75" 
+    data-images="img/forros/22/1.jpeg,img/forros/22/2.jpeg">
+    <img src="img/forros/22/1.jpeg" alt="Forro Sofá L Licra con Rucha Estampado Royal (1 Pieza)" loading="lazy">
+    <div class="card-info">
+        <h3>Forro L Licra Estampado Royal (1P)</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 321 Licra Estampado con Rucha Winsor" 
+    data-descripcion="Sofá 321 (2-3 puestos) con estampado Winsor marca. Material licra con rucha decorativa integrada perfecta. Patrón estampado Winsor reconocido y elegante. Colores coordinados y armonía visual garantizada. Elasticidad licra superior sin rotura. Durabilidad probada por años en mercado. Limpieza fácil sin químicos agresivos. Stock completo. Disponible ahora en varias opciones color." 
+    data-precio="$26.75" 
+    data-images="img/forros/23/1.jpeg,img/forros/23/2.jpeg,img/forros/23/3.jpeg,img/forros/23/4.jpeg,img/forros/23/5.jpeg,img/forros/23/6.jpeg,img/forros/23/7.jpeg,img/forros/23/8.jpeg,img/forros/23/9.jpeg">
+    <img src="img/forros/23/1.jpeg" alt="Forro Sofá 321 Licra Estampado Winsor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Licra Estampado Winsor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Poliester Acolchonado sin Rucha Unicolor" 
+    data-descripcion="Lujo de poliéster acolchonado grueso para sofá individual. Línea moderna sin rucha decorativa adicional. Material acolchonado grueso y suave al tacto. Unicolor disponible en múltiples tonos disponibles. Protección premium contra todo tipo daño. Suavidad al tacto inmejorable y confortab le. Durabilidad extrema probada en tiempo. Ideal para hogares con mascotas y niños activos." 
+    data-precio="$42.80" 
+    data-images="img/forros/02/1.jpeg,img/forros/02/2.jpeg,img/forros/02/3.jpeg,img/forros/02/4.jpeg,img/forros/02/5.jpeg,img/forros/02/6.jpeg,img/forros/02/7.jpeg,img/forros/02/8.jpeg,img/forros/02/9.jpeg">
+    <img src="img/forros/02/1.jpeg" alt="Forro Sofá 311 Poliester Acolchonado sin Rucha Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 311 Poliester Acolchonado</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card agotado" 
+    data-nombre="Forro Sofá 311 Licra con Rucha Unicolor LeMond" 
+    data-descripcion="Forro LeMond marca reconocida en mercado mundial. Licra con rucha decorativa elegante integrada. Unicolor en paleta selecta coordin ada. Material licra de excelencia probada. Rucha que define elegancia y sofisticación. Elasticidad superior sin degradación. Marca de confianza y garantía." 
+    data-precio="$32.10" 
+    data-images="img/forros/25/1.jpeg,img/forros/25/2.jpeg">
+    <img src="img/forros/25/1.jpeg" alt="Forro Sofá 311 Licra con Rucha LeMond" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 311 Licra Rucha LeMond</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 321 Licra con Rucha Unicolor LeMond" 
+    data-descripcion="Sofá 2-3 puestos protegido con LeMond marca. Licra premium con rucha decorativa elegante. Unicolor elegante coordinado con hogar. Patrón simple pero sofisticado y duradero. Elasticidad licra superior sin desprendimiento. Durabilidad marca reconocida mundialmente. Disponible stock actual en colores variados." 
+    data-precio="$32.10" 
+    data-images="img/forros/26/1.jpeg,img/forros/26/2.jpeg">
+    <img src="img/forros/26/1.jpeg" alt="Forro Sofá 321 Licra con Rucha LeMond" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Licra Rucha LeMond</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Poliester Acolchonado con Rucha Negro" 
+    data-descripcion="Material acolchonado grueso y suave al tacto premium. Color negro elegante y versátil. Rucha decorativa integrada en borde. Poliéster de calidad superior de fabricante. Protección máxima contra desgarre. Toque premium y sofisticación garantizada. Disponible ahora en stock completo." 
+    data-precio="$37.45" 
+    data-images="img/forros/27/1.jpeg,img/forros/27/2.jpeg">
+    <img src="img/forros/27/1.jpeg" alt="Forro Sofá 311 Poliester Acolchonado Negro" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 311 Poliester Acolchonado Negro</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Set Managua Collection Liso 6 Piezas" 
+    data-descripcion="Set completo Managua Collection de 6 piezas que transforma tu sala instantáneamente. Incluye: forro sofá liso sin vuelo, 2 cortinas coordinadas y una alfombra a juego. Material textil de calidad transpirable que facilita la limpieza. Diseño minimalista funcional ideal para uso diario con máxima durabilidad. Cobertura integral y coordinada para todo tu espacio." 
+    data-precio="$69.55" 
+    data-images="img/forros/28/1.jpeg,img/forros/28/2.jpeg,img/forros/28/3.jpeg,img/forros/28/4.jpeg,img/forros/28/5.jpeg,img/forros/28/6.jpeg,img/forros/28/7.jpeg">
+    <img src="img/forros/28/1.jpeg" alt="Set Managua Collection Liso 6 Piezas" loading="lazy">
+    <div class="card-info">
+        <h3>Set Managua Liso 6 Piezas</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 321 Set Completo 17 Piezas Elegante" 
+    data-descripcion="Transforma tu hogar con el lujo del set Bouquetex de diecisiete piezas que ofrece una renovación total para tu sala combinando elegancia y practicidad en diseños de ensueño, pues incluye desde una alfombra de gran formato hasta cuatro cortinas blackout para tu privacidad absoluta, junto a forros resistentes para sofás 321 con cinco fundas de cojín y borlas decorativas que garantizan un acabado de revista con la máxima calidad y estilo." 
+    data-precio="$74.90" 
+    data-images="img/forros/29/1.jpeg,img/forros/29/2.jpeg">
+    <img src="img/forros/29/1.jpeg" alt="Forro Sofá 321 Set Completo 17 Piezas" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Set Completo 17 Piezas</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Poliester Acolchonado Grueso sin Rucha Unicolor" 
+    data-descripcion="Máxima protección para sofá individual de 1 puesto. Acolchado grueso de poliéster de calidad. Línea minimalista sin rucha decorativa. Unicolor robusto en múltiples opciones tonales. Material impenetrable contra desgarre. Durabilidad absoluta probada por fabricante. Stock disponible ahora en variedad colores." 
+    data-precio="$42.80" 
+    data-images="img/forros/30/1.jpeg,img/forros/30/2.jpeg,img/forros/30/3.jpeg,img/forros/30/4.jpeg,img/forros/30/5.jpeg">
+    <img src="img/forros/30/1.jpeg" alt="Forro Sofá 311 Poliester Acolchonado Grueso" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 311 Poliester Acolchonado Grueso</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 321 Poliester Acolchonado Grueso sin Rucha Unicolor" 
+    data-descripcion="Sofá grande 2-3 puestos completamente protegido. Acolchado grueso poliéster de máxima calidad. Diseño minimalista limpio sin rucha. Unicolor disponible en tonos variados. Máxima resistencia al tiempo y uso. Stock disponible ahora con envío rápido." 
+    data-precio="$42.80" 
+    data-images="img/forros/30/1.jpeg,img/forros/30/2.jpeg,img/forros/30/3.jpeg,img/forros/30/4.jpeg,img/forros/30/5.jpeg">
+    <img src="img/forros/30/2.jpeg" alt="Forro Sofá 321 Poliester Acolchonado Grueso" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Poliester Acolchonado Grueso</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Licra sin Rucha Unicolor" 
+    data-descripcion="Licra simple y elegante con diseño limpio. Sofá individual protegido sin accesorios. Sin decoraciones adicionales línea moderna. Unicolor minimalista que combina todo. Material licra suave y de fácil limpieza. Línea limpia moderna sin excesos. Disponible ahora en stock completo." 
+    data-precio="$42.80" 
+    data-images="img/forros/32/1.jpeg,img/forros/32/2.jpeg">
+    <img src="img/forros/32/1.jpeg" alt="Forro Sofá 311 Licra sin Rucha Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 311 Licra sin Rucha Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 321 Licra sin Rucha Unicolor" 
+    data-descripcion="Sofá 2-3 puestos con licra simple pero elegante. Sin rucha línea moderna y minimalista. Unicolor disponible en gama variada. Elasticidad licra superior sin degradación. Durabilidad comprobada por años mercado. Stock disponible ahora en opciones color." 
+    data-precio="$42.80" 
+    data-images="img/forros/33/1.jpeg,img/forros/33/2.jpeg">
+    <img src="img/forros/33/1.jpeg" alt="Forro Sofá 321 Licra sin Rucha Unicolor" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Licra sin Rucha Unicolor</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Licra Estampado con Rucha" 
+    data-descripcion="Individual con estampado moderno y atractivo. Licra premium de calidad garantizada. Rucha decorativa que enmarcan el diseño. Patrón estampado que sobresale. Colores vibrantes que no se desvanecen. Elasticidad perfecta para ajuste. Disponible stock completo en variedad." 
+    data-precio="$32.10" 
+    data-images="img/forros/34/1.jpeg,img/forros/34/2.jpeg">
+    <img src="img/forros/34/1.jpeg" alt="Forro Sofá 311 Licra Estampado con Rucha" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 311 Licra Estampado Rucha</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card agotado" 
+    data-nombre="Forro Sofá 321 Licra Estampado con Rucha" 
+    data-descripcion="Sofá 2-3 puestos con estampado moderno. Licra de calidad superior garantizada. Rucha elegante que complementan diseño. Patrón moderno que renueva ambiente. Elasticidad superior sin problemas. Durabilidad comprobada." 
+    data-precio="$32.10" 
+    data-images="img/forros/35/1.jpeg,img/forros/35/2.jpeg">
+    <img src="img/forros/35/1.jpeg" alt="Forro Sofá 321 Licra Estampado con Rucha" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Licra Estampado Rucha</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card" 
+    data-nombre="Forro Sofá 311 Licra Estampado con Rucha + Fundas" 
+    data-descripcion="Set integral: forro individual + fundas almohada coordinadas. Estampado moderno que unifica decoración. Licra premium de excelencia comprobada. Rucha elegante en ambas piezas. Fundas a juego que complementan forro. Decoración integral del sofá completamente. Disponible ahora en stock actual." 
+    data-precio="$37.45" 
+    data-images="img/forros/36/1.jpeg,img/forros/36/2.jpeg">
+    <img src="img/forros/36/1.jpeg" alt="Forro Sofá 311 Licra Estampado con Fundas" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 311 Licra Estampado + Fundas</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
+
+  <article class="card agotado" 
+    data-nombre="Forro Sofá 321 Licra Estampado con Rucha + Fundas" 
+    data-descripcion="Sofá completo 2-3 puestos + fundas almohada coordinadas. Estampado moderno que sobresale. Licra de excelencia probada. Rucha decorativa en ambas piezas. Fundas coordinadas que complementan forro. Protección y belleza del sofá." 
+    data-precio="$37.45" 
+    data-images="img/forros/37/1.jpeg,img/forros/37/2.jpeg">
+    <img src="img/forros/37/1.jpeg" alt="Forro Sofá 321 Licra Estampado con Fundas" loading="lazy">
+    <div class="card-info">
+        <h3>Forro 321 Licra Estampado + Fundas</h3>
         <button onclick="toggleProducto(this)">Consultar</button>
     </div>
   </article>
@@ -540,7 +1050,7 @@
 
   <article class="card" 
     data-nombre="Juego de Alfombras para Cocina (2 Piezas - 3D Kitchen Stuff)" 
-    data-descripcion="Exclusivo juego de alfombras de cocina de 2 piezas de las marcas Pasión Guajira y Veko, que combina funcionalidad y estilo contemporáneo. Cada pieza cuenta con un moderno diseño 3D que resalta cualquier espacio. Las medidas son 40cm x 60cm y 40cm x 120cm, ideales para cubrir áreas clave como el fregadero y la estufa. Proporciona protección completa para tus pisos mientras aporta un toque decorativo atractivo. Solución económica y visualmente atractiva para mantener tu cocina limpia, protegida y con un ambiente totalmente renovado." 
+    data-descripcion="Juego de 2 alfombras 3D de Pasión Guajira y Veko: 40x60cm y 40x120cm. Diseño moderno que protege pisos junto a fregadero y estufa. Textura 3D decorativa, económica y duradera. Mantiene tu cocina limpia, protegida y renovada con estilo contemporáneo." 
     data-precio="$6.42" 
     data-images="img/alfombras/03/1.jpeg,img/alfombras/03/2.jpeg,img/alfombras/03/3.jpeg,img/alfombras/03/4.jpeg,img/alfombras/03/5.jpeg,img/alfombras/03/6.jpeg,img/alfombras/03/7.jpeg,img/alfombras/03/8.jpeg,img/alfombras/03/9.jpeg,img/alfombras/03/10.jpeg,img/alfombras/03/11.jpeg,img/alfombras/03/12.jpeg,img/alfombras/03/13.jpeg,img/alfombras/03/14.jpeg,img/alfombras/03/15.jpeg,img/alfombras/03/16.jpeg,img/alfombras/03/17.jpeg,img/alfombras/03/18.jpeg,img/alfombras/03/19.jpeg,img/alfombras/03/20.jpeg,img/alfombras/03/21.jpeg,img/alfombras/03/22.jpeg,img/alfombras/03/23.jpeg">
     <img src="img/alfombras/03/1.jpeg" alt="Juego de Alfombras para Cocina (2 Piezas)" loading="lazy">
@@ -582,7 +1092,7 @@
 
   <article class="card" 
     data-nombre="Almohada Cojín Decorativo Home Collection CasaIsla - 45x45cm" 
-    data-descripcion="Dale un toque de textura y elegancia a tus espacios con este cojín decorativo de la exclusiva línea Home Collection de CasaIsla. Medidas: 45cm x 45cm, 100% poliéster. Destaca por su sofisticado acabado de tejido corrugado en relieve que crea un patrón visual dinámico y minimalista en color gris humo. Tejido suave de alta calidad que proporciona soporte cómodo para el descanso diario mientras actúa como pieza clave de diseño. Ideal para complementar sofás, camas o sillones. Renueva inmediatamente la apariencia de tu sala o dormitorio." 
+    data-descripcion="Cojín CasaIsla Home Collection 45x45cm, 100% poliéster. Tejido corrugado en relieve con patrón minimalista gris humo. Suave, cómodo y de calidad premium para sofás, camas o sillones. Renueva decoración con elegancia y textura dinámica." 
     data-precio="$5.35" 
     data-images="img/almohadas/03/1.jpeg,img/almohadas/03/2.jpeg,img/almohadas/03/3.jpeg,img/almohadas/03/4.jpeg,img/almohadas/03/5.jpeg,img/almohadas/03/6.jpeg,img/almohadas/03/7.jpeg,img/almohadas/03/8.jpeg,img/almohadas/03/9.jpeg,img/almohadas/03/10.jpeg,img/almohadas/03/11.jpeg">
     <img src="img/almohadas/03/1.jpeg" alt="Almohada Cojín Decorativo Home Collection CasaIsla" loading="lazy">
@@ -690,7 +1200,7 @@
 
 <article class="card" 
     data-nombre="Toallas de Niño Nuevas (27x54)" 
-    data-descripcion="Toallas de niño de tamaño 27x54." 
+    data-descripcion="Toallas de niño tamaño 27x54cm. Tejido suave, absorbente y de secado rápido. Perfectas para playa, piscina o uso diario. Cálidas, cómodas y duraderas para los pequeños." 
     data-precio="$5.35" 
     data-images="img/toallas/02/1.jpeg,img/toallas/02/2.jpeg,img/toallas/02/3.jpeg,img/toallas/02/4.jpeg,img/toallas/02/5.jpeg,img/toallas/02/6.jpeg,img/toallas/02/7.jpeg,img/toallas/02/8.jpeg,img/toallas/02/9.jpeg,img/toallas/02/10.jpeg,img/toallas/02/11.jpeg,img/toallas/02/12.jpeg">
     <img src="img/toallas/02/1.jpeg" alt="Toallas de Niño Nuevas (27x54)" loading="lazy">
@@ -753,7 +1263,7 @@
 
   <article class="card" 
     data-nombre="Cortinas Blackout Estampadas (54 x 90 pulgadas)" 
-    data-descripcion="Cortinas con aro que no permiten el paso de la luz solar, disponibles en cuatro colores distintos con ocho diseños diferentes. Decoradas con detalles dorados que aportan elegancia a cualquier ambiente. Tamaño grande de medidas 54x90 pulgadas (137×228cm), material premium con tecnología antisol. Lo mejor para decorar tu hogar o habitación, bloqueando la luz de forma efectiva mientras mantienen un aspecto sofisticado y moderno." 
+    data-descripcion="Cortinas blackout de aro 54x90 pulgadas (137×228cm) con 4 colores y 8 diseños. Detalles dorados, material premium antisol. Bloquean luz efectivamente manteniendo aspecto sofisticado y moderno para hogar o habitación." 
     data-precio="$21.40" 
     data-images="img/cortinas/02/1.jpeg,img/cortinas/02/2.jpeg,img/cortinas/02/3.jpeg,img/cortinas/02/4.jpeg,img/cortinas/02/5.jpeg,img/cortinas/02/6.jpeg,img/cortinas/02/7.jpeg,img/cortinas/02/8.jpeg">
     <img src="img/cortinas/02/1.jpeg" alt="Cortinas Blackout Estampadas" loading="lazy">
@@ -769,6 +1279,17 @@
 <section class="categoria" data-categoria="Accesorios">
 <h2 class="category-title">Accesorios</h2>
 <div class="grid">
+  <article class="card" 
+    data-nombre="Reloj Casio Original" 
+    data-descripcion="Lleva la confianza de un Casio original en tu muñeca. Amplia variedad de modelos: elegantes acabados en acero inoxidable y tonos dorados, diseños clásicos con correas de cuero o resina. Resistentes, precisos y perfectos para cualquier ocasión, evento formal o uso diario. Calidad garantizada al mejor precio. Elige el que mejor se adapte a tu personalidad." 
+    data-precio="desde $31.03 hasta $37.45" 
+    data-images="img/accesorios/01/1.jpeg,img/accesorios/01/2.jpeg,img/accesorios/01/3.jpeg,img/accesorios/01/4.jpeg,img/accesorios/01/5.jpeg,img/accesorios/01/6.jpeg,img/accesorios/01/7.jpeg,img/accesorios/01/8.jpeg">
+    <img src="img/accesorios/01/1.jpeg" alt="Reloj Casio Original" loading="lazy">
+    <div class="card-info">
+        <h3>Reloj Casio Original</h3>
+        <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  </article>
 </div>
 </section>
 
@@ -978,58 +1499,53 @@
 <footer class="footer">
   <div class="footer-container">
     <!-- Logo y Descripción -->
-    <div class="footer-section">
+    <div class="footer-section footer-brand">
       <h3>HOME STYLE 507</h3>
-      <p>Encuentra los mejores productos para tu hogar. Sábanas, cortinas, decoración y mucho más.</p>
+      <p class="footer-slogan">Lo mejor para tu Hogar y a tu Estilo</p>
+      <p class="footer-description">Encuentra los mejores productos para tu hogar. Sábanas, cortinas, decoración y mucho más.</p>
     </div>
 
     <!-- Redes Sociales -->
     <div class="footer-section">
-      <h4>Síguenos</h4>
+      <h4>Síguenos en Instagram</h4>
       <div class="social-links">
-        <a href="https://www.instagram.com/homeystyle.507/" target="_blank" rel="noopener noreferrer" aria-label="Instagram homeystyle.507">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="social-icon">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm4.965-10.322a1.44 1.44 0 1 1 2.881.001 1.44 1.44 0 0 1-2.881-.001z"/>
-          </svg>
+        <a href="https://www.instagram.com/homeystyle507/" target="_blank" rel="noopener noreferrer" class="social-link-card" aria-label="Instagram homeystyle507">
+          <img src="img/icons/instagram.svg" alt="Instagram" class="social-icon-img">
+          <span class="social-username">@homeystyle507</span>
         </a>
-        <a href="https://www.instagram.com/homeystylepty/" target="_blank" rel="noopener noreferrer" aria-label="Instagram homeystylepty">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="social-icon">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/>
-          </svg>
+        <a href="https://www.instagram.com/homeystylepty/" target="_blank" rel="noopener noreferrer" class="social-link-card" aria-label="Instagram homeystylepty">
+          <img src="img/icons/instagram.svg" alt="Instagram" class="social-icon-img">
+          <span class="social-username">@homeystylepty</span>
         </a>
-        <a href="https://www.instagram.com/homeystyle507/" target="_blank" rel="noopener noreferrer" aria-label="Instagram homeystyle507">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="social-icon">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/>
-          </svg>
+        <a href="https://www.instagram.com/homeystyle.507/" target="_blank" rel="noopener noreferrer" class="social-link-card" aria-label="Instagram homeystyle.507">
+          <img src="img/icons/instagram.svg" alt="Instagram" class="social-icon-img">
+          <span class="social-username">@homeystyle.507</span>
         </a>
       </div>
     </div>
 
     <!-- TikTok -->
     <div class="footer-section">
-      <h4>TikTok</h4>
+      <h4>Síguenos en TikTok</h4>
       <div class="social-links">
-        <a href="https://www.tiktok.com/@homeystyle.507?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok homeystyle.507">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="social-icon">
-            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.1 1.75 2.9 2.9 0 0 1 2.31-4.64 2.88 2.88 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.08A6.081 6.081 0 0 0 5 20.1a6.081 6.081 0 0 0 6.04 6.09q.5 0 1-.03v-3.63a4.84 4.84 0 0 0 3.54-4.33V22h3.45V11.4a7.816 7.816 0 0 0 3.54-1.09v-3.62z"/>
-          </svg>
+        <a href="https://www.tiktok.com/@homeystyle507?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" class="social-link-card" aria-label="TikTok homeystyle507">
+          <img src="img/icons/tiktok.svg" alt="TikTok" class="social-icon-img">
+          <span class="social-username">@homeystyle507</span>
         </a>
-        <a href="https://www.tiktok.com/@homeystylepty07?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok homeystylepty07">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="social-icon">
-            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.1 1.75 2.9 2.9 0 0 1 2.31-4.64 2.88 2.88 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.08A6.081 6.081 0 0 0 5 20.1a6.081 6.081 0 0 0 6.04 6.09q.5 0 1-.03v-3.63a4.84 4.84 0 0 0 3.54-4.33V22h3.45V11.4a7.816 7.816 0 0 0 3.54-1.09v-3.62z"/>
-          </svg>
+        <a href="https://www.tiktok.com/@homeystylepty07?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" class="social-link-card" aria-label="TikTok homeystylepty07">
+          <img src="img/icons/tiktok.svg" alt="TikTok" class="social-icon-img">
+          <span class="social-username">@homeystylepty07</span>
         </a>
-        <a href="https://www.tiktok.com/@home.style.507?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok home.style.507">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="social-icon">
-            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.1 1.75 2.9 2.9 0 0 1 2.31-4.64 2.88 2.88 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.08A6.081 6.081 0 0 0 5 20.1a6.081 6.081 0 0 0 6.04 6.09q.5 0 1-.03v-3.63a4.84 4.84 0 0 0 3.54-4.33V22h3.45V11.4a7.816 7.816 0 0 0 3.54-1.09v-3.62z"/>
-          </svg>
+        <a href="https://www.tiktok.com/@home.style.507?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" class="social-link-card" aria-label="TikTok home.style.507">
+          <img src="img/icons/tiktok.svg" alt="TikTok" class="social-icon-img">
+          <span class="social-username">@home.style.507</span>
         </a>
       </div>
     </div>
 
     <!-- WhatsApp -->
     <div class="footer-section">
-      <h4>WhatsApp</h4>
+      <h4>Contáctanos por WhatsApp</h4>
       <div class="whatsapp-list">
         <a href="https://wa.me/50769778350" target="_blank" rel="noopener noreferrer" class="whatsapp-link" aria-label="WhatsApp Christian">Christian / 6977-8350</a>
         <a href="https://wa.me/50762606548" target="_blank" rel="noopener noreferrer" class="whatsapp-link" aria-label="WhatsApp Angel">Angel / 6260-6548</a>

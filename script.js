@@ -44,6 +44,56 @@ function configurarEventListeners() {
       }
     });
   });
+  
+  // Menú hamburguesa
+  const menuToggle = document.getElementById("menuToggle");
+  const menuClose = document.getElementById("menuClose");
+  const menuOverlay = document.getElementById("menuOverlay");
+  const sideMenu = document.getElementById("sideMenu");
+  
+  if (menuToggle) {
+    menuToggle.addEventListener("click", () => {
+      sideMenu.classList.add("active");
+      menuOverlay.classList.add("active");
+      document.body.style.overflow = "hidden";
+      menuToggle.setAttribute("aria-expanded", "true");
+    });
+  }
+  
+  const cerrarMenu = () => {
+    sideMenu.classList.remove("active");
+    menuOverlay.classList.remove("active");
+    document.body.style.overflow = "";
+    if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+  };
+  
+  if (menuClose) {
+    menuClose.addEventListener("click", cerrarMenu);
+  }
+  
+  if (menuOverlay) {
+    menuOverlay.addEventListener("click", cerrarMenu);
+  }
+  
+  // Enlaces del menú lateral
+  document.querySelectorAll(".menu-link").forEach(link => {
+    link.addEventListener("click", (e) => {
+      const category = e.currentTarget.dataset.category;
+      if (category) {
+        e.preventDefault();
+        
+        // Actualizar estado activo
+        document.querySelectorAll(".menu-link").forEach(l => l.classList.remove("active"));
+        e.currentTarget.classList.add("active");
+        
+        // Filtrar por categoría
+        filtrarCategoria(category, null);
+        
+        // Cerrar menú
+        cerrarMenu();
+      }
+    });
+  });
 
   // Imágenes de productos para abrir modal
   document.querySelectorAll(".card img").forEach(img => {
