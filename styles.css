@@ -1,0 +1,582 @@
+:root{
+  --primary:#081a33;
+  --accent:#e0b75a;
+  --bg:#f2f5f7;
+  --wa:#25d366;
+  --shadow-soft:0 6px 18px rgba(0,0,0,.12);
+  --shadow-hover:0 14px 30px rgba(0,0,0,.18);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Segoe UI, Inter, system-ui, sans-serif;
+}
+
+/* ================= ACCESIBILIDAD ================= */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible para navegación con teclado */
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--primary);
+  padding-bottom:140px;
+}
+
+/* ================= HEADER ================= */
+header{
+  background:linear-gradient(180deg,#081a33,#0c2b5e);
+  color:white;
+  padding:28px 20px;
+  text-align:center;
+}
+
+header h1{
+  letter-spacing:4px;
+  font-weight:500;
+  font-size:1.8rem;
+}
+
+header span{
+  color:var(--accent);
+  font-size:2rem;
+  font-weight:800;
+}
+
+.header-tagline {
+  font-size: 1rem;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-top: 8px;
+  font-style: italic;
+  opacity: 0.95;
+}
+
+/* ================= SEARCH ================= */
+.search-box{
+  padding:14px;
+  position:relative;
+}
+
+.search-box input{
+  width:100%;
+  padding:16px;
+  border-radius:20px;
+  border:2px solid #d0d0d0;
+  font-size:1rem;
+  outline:none;
+  transition: border-color 0.3s;
+}
+
+.search-box input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(224, 183, 90, 0.1);
+}
+
+/* ================= NAV ================= */
+/* 📱 MÓVIL: scroll horizontal */
+nav{
+  display:flex;
+  row-gap: 10px;
+  column-gap: 20px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+  padding:12px;
+  background:white;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+nav::-webkit-scrollbar{
+  display:none;
+}
+
+nav button{
+  border:2px solid var(--accent);
+  background:white;
+  color:var(--primary);
+  padding:10px 24px;
+  border-radius:30px;
+  font-size:.8rem;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:.25s;
+}
+
+nav button.active,
+nav button:hover{
+  background:var(--accent);
+}
+
+/* 🖥 ESCRITORIO: 2 filas exactas */
+@media (min-width: 1024px){
+  nav{
+    flex-wrap:wrap;
+    overflow:visible;
+    justify-content:center;
+    margin:0 auto;
+  }
+}
+
+/* ================= CATEGORY TITLE ================= */
+.category-title{
+  margin:34px 20px 14px;
+  font-size:1.15rem;
+  font-weight:900;
+  border-left:6px solid var(--accent);
+  padding-left:14px;
+}
+
+/* ================= GRID ================= */
+/* 📱 MÓVIL: 2 columnas */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:12px;
+  padding:14px;
+}
+
+/* 🖥 ESCRITORIO: 5 columnas */
+@media (min-width: 1024px){
+  .grid{
+    grid-template-columns:repeat(5, 1fr);
+    gap:20px;
+    padding:20px 40px;
+  }
+
+  .category-title{
+    margin-left:40px;
+  }
+}
+
+/* ================= CARD ================= */
+.card{
+  background:white;
+  border-radius:18px;
+  box-shadow:var(--shadow-soft);
+  overflow:hidden;
+  transition:.3s ease;
+  position:relative;
+  order:1;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:var(--shadow-hover);
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  display:block;
+}
+
+/* ================= CARD AGOTADO ================= */
+.card.agotado{
+  opacity:.65;
+  position:relative;
+  order:2;
+}
+
+.card.agotado::before{
+  content:"AGOTADO";
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%) rotate(-25deg);
+  background:#d32f2f;
+  color:white;
+  padding:12px 40px;
+  font-weight:900;
+  font-size:1.8rem;
+  white-space:nowrap;
+  z-index:10;
+  letter-spacing:3px;
+  box-shadow:0 4px 12px rgba(211, 47, 47, 0.4);
+  border-radius:4px;
+  text-shadow:0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* ================= CARD INFO ================= */
+.card-info{
+  padding:14px;
+  text-align:center;
+}
+
+.card-info h3{
+  font-size:.8rem;
+  font-weight:700;
+  line-height:1.3;
+  min-height:2.6em;
+}
+
+/* ================= BUTTON ================= */
+.card-info button{
+  margin-top:12px;
+  width:100%;
+  padding:11px;
+  border:none;
+  border-radius:14px;
+  font-size:.75rem;
+  font-weight:900;
+  background:var(--primary);
+  color:white;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.card-info button:hover:not(:disabled){
+  opacity:.9;
+}
+
+.card-info button.selected{
+  background:var(--wa);
+}
+
+.card-info button:disabled{
+  background:#a0a0a0;
+  cursor:not-allowed;
+}
+
+/* ================= MODAL IMAGEN ================= */
+#modalImagen{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  z-index:3000;
+  justify-content:center;
+  align-items:center;
+  padding:18px;
+}
+
+#modalImagen.activo{
+  display:flex;
+}
+
+.modal-caja{
+  background:white;
+  border-radius:22px;
+  max-width:480px;
+  width:100%;
+  overflow:hidden;
+  position:relative;
+}
+
+.modal-caja img{
+  width:100%;
+  height:300px;
+  object-fit:cover;
+  display:block;
+}
+
+.modal-cerrar{
+  position:absolute;
+  top:14px;
+  right:14px;
+  background:#c62828;
+  color:white;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  border:none;
+  font-size:24px;
+  font-weight:bold;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:10;
+}
+
+.modal-cuerpo{
+  padding:24px;
+}
+
+.modal-cuerpo h2{
+  margin-bottom:8px;
+  font-size:1.2rem;
+}
+
+.modal-cuerpo p{
+  font-size:.95rem;
+  line-height:1.6;
+  color:#444;
+  margin-bottom:20px;
+}
+
+.modal-precio{
+  color:#D4AF37; /* dorado */
+  font-weight:800;
+  font-size:1.05rem;
+  margin-bottom:12px;
+}
+
+.modal-btn{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:14px;
+  font-weight:900;
+  font-size:.95rem;
+  background:var(--primary);
+  color:white;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.modal-btn:hover{
+  opacity:.9;
+}
+
+.modal-btn.selected{
+  background:var(--wa);
+}
+
+/* ================= FLOAT WHATSAPP ================= */
+.float-wa{
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--wa);
+  color:white;
+  padding:20px 36px;
+  border-radius:44px;
+  font-weight:900;
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+  z-index:2000;
+  cursor:pointer;
+  font-size:.95rem;
+}
+
+/* ================= MODAL ELEGIR VENDEDOR (PROFESIONAL) ================= */
+
+/* Fondo oscuro con desenfoque */
+.modal-vendedor-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 26, 51, 0.85); /* Color primario con transparencia */
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Caja del modal */
+.modal-vendedor-caja {
+  background: var(--white);
+  padding: 35px 25px;
+  border-radius: 28px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.modal-vendedor-caja h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.modal-vendedor-caja p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 25px;
+  line-height: 1.4;
+}
+
+/* El contador de tiempo */
+#timer {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--primary);
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  border-radius: 50%;
+  font-weight: 900;
+  margin: 0 5px;
+  box-shadow: 0 4px 10px rgba(224, 183, 90, 0.4);
+}
+
+/* Contenedor de botones */
+#listaVendedores {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Estilo de los botones de vendedor */
+.btn-vendedor {
+  background: #f8f9fa;
+  border: 2px solid #edf2f7;
+  color: var(--primary);
+  padding: 15px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Icono de WhatsApp simulado antes del nombre del vendedor */
+.btn-vendedor::before {
+  content: "💬";
+  font-size: 1.1rem;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+  background: linear-gradient(180deg, #081a33, #0c2b5e);
+  color: white;
+  padding: 40px 20px 20px;
+  margin-top: 60px;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.footer-section h3 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.footer-section h4 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.footer-section p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ================= SOCIAL LINKS ================= */
+.social-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: white;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.social-links a:hover {
+  background: var(--accent);
+  color: var(--primary);
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+
+.social-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* ================= WHATSAPP LIST ================= */
+.whatsapp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.whatsapp-link {
+  display: inline-block;
+  padding: 10px 15px;
+  background: rgba(37, 211, 102, 0.2);
+  border: 1px solid var(--wa);
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.whatsapp-link:hover {
+  background: var(--wa);
+  color: white;
+  transform: translateX(5px);
+}
+
+/* ================= FOOTER BOTTOM ================= */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
