@@ -13,6 +13,18 @@ let productoActual = null; // <--- ESTA ES LA QUE FALTABA
 let tiempoRestante = 7;
 let intervaloTimer = null;
 
+/* ================= FUNCIÓN GLOBAL: CERRAR MENÚ ================= */
+function cerrarMenu() {
+  const sideMenu = document.getElementById("sideMenu");
+  const menuOverlay = document.getElementById("menuOverlay");
+  const menuToggle = document.getElementById("menuToggle");
+  
+  if (sideMenu) sideMenu.classList.remove("active");
+  if (menuOverlay) menuOverlay.classList.remove("active");
+  document.body.style.overflow = "";
+  if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+}
+
 /* ================= INICIALIZAR ================= */
 document.addEventListener("DOMContentLoaded", () => {
   restaurarSeleccion();
@@ -25,7 +37,33 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Iniciar carruseles en las cartas de productos
   iniciarCarruelesCartas();
+  
+  // Iniciar alternancia de eslogan
+  iniciarAlternanciaEslogan();
 });
+
+/* ================= ALTERNANCIA DE ESLOGAN ================= */
+function iniciarAlternanciaEslogan() {
+  const sp1 = document.querySelector('.header-tagline.SP1');
+  const sp2 = document.querySelector('.header-tagline.SP2');
+  
+  if (!sp1 || !sp2) return;
+  
+  let mostrandoSP1 = true;
+  
+  setInterval(() => {
+    if (mostrandoSP1) {
+      // Fade out SP1, fade in SP2
+      sp1.classList.add('fade-out');
+      sp2.classList.add('fade-in');
+    } else {
+      // Fade out SP2, fade in SP1
+      sp1.classList.remove('fade-out');
+      sp2.classList.remove('fade-in');
+    }
+    mostrandoSP1 = !mostrandoSP1;
+  }, 8000);
+}
 
 /* ================= CONFIGURAR EVENT LISTENERS ================= */
 function configurarEventListeners() {
@@ -59,13 +97,6 @@ function configurarEventListeners() {
       menuToggle.setAttribute("aria-expanded", "true");
     });
   }
-  
-  const cerrarMenu = () => {
-    sideMenu.classList.remove("active");
-    menuOverlay.classList.remove("active");
-    document.body.style.overflow = "";
-    if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
-  };
   
   if (menuClose) {
     menuClose.addEventListener("click", cerrarMenu);
@@ -425,6 +456,67 @@ function finalizarYEnviar(numeroDestino) {
 }
 
 /* ================= BUSCADOR ================= */
+/* ================= DISTANCIA DE LEVENSHTEIN (FUZZY SEARCH) ================= */
+function distanciaLevenshtein(a, b) {
+  const matA = a.split('');
+  const matB = b.split('');
+  const matriz = [];
+  
+  for (let i = 0; i <= matB.length; i++) {
+    matriz[i] = [i];
+  }
+  
+  for (let j = 0; j <= matA.length; j++) {
+    matriz[0][j] = j;
+  }
+  
+  for (let i = 1; i <= matB.length; i++) {
+    for (let j = 1; j <= matA.length; j++) {
+      const costo = matA[j - 1] === matB[i - 1] ? 0 : 1;
+      matriz[i][j] = Math.min(
+        matriz[i][j - 1] + 1,
+        matriz[i - 1][j] + 1,
+        matriz[i - 1][j - 1] + costo
+      );
+    }
+  }
+  
+  return matriz[matB.length][matA.length];
+}
+
+/* ================= BÚSQUEDA FUZZY ================= */
+function coincideFuzzy(texto, consulta, tolerancia = 2) {
+  // Si la consulta está vacía, todo coincide
+  if (!consulta) return true;
+  
+  // 1. Búsqueda exacta (prioridad máxima)
+  if (texto.includes(consulta)) return true;
+  
+  // 2. Búsqueda por palabras individuales
+  const palabrasTexto = texto.split(/\s+/);
+  const palabrasConsulta = consulta.split(/\s+/);
+  
+  for (const pConsulta of palabrasConsulta) {
+    let encontrada = false;
+    
+    for (const pTexto of palabrasTexto) {
+      const distancia = distanciaLevenshtein(pConsulta, pTexto);
+      
+      // Permitir si la distancia es menor o igual a la tolerancia
+      if (distancia <= tolerancia) {
+        encontrada = true;
+        break;
+      }
+    }
+    
+    if (!encontrada) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
 function filtrar(){
   const q = (document.getElementById("search").value || "").toLowerCase().trim();
 
@@ -432,7 +524,7 @@ function filtrar(){
   document.querySelectorAll(".card").forEach(card=>{
     try {
       const nombre = (card.dataset.nombre || "").toLowerCase();
-      const visible = !q || nombre.includes(q);
+      const visible = !q || coincideFuzzy(nombre, q);
       card.style.display = visible ? "" : "none";
     } catch (error) {
       console.error("Error en filtro de card:", error);
@@ -462,19 +554,91 @@ function filtrarCategoria(cat, btn){
     btn.setAttribute("aria-pressed", "true");
   }
 
-  document.querySelectorAll(".categoria").forEach(sec=>{
-    sec.style.display =
-      cat === "Todos" || sec.dataset.categoria === cat
-      ? ""
-      : "none";
-  });
+  // Manejar categorías especiales: Promociones y Novedades
+  if (cat === "Promociones") {
+    // Mostrar solo productos con clase "promocion"
+    document.querySelectorAll(".card").forEach(card => {
+      card.style.display = card.classList.contains("promocion") ? "" : "none";
+    });
+    
+    // Ocultar todas las categorías
+    document.querySelectorAll(".categoria").forEach(sec => {
+      sec.style.display = "none";
+    });
+    
+    // Mostrar un título
+    mostrarTituloEspecial("promocion");
+  } else if (cat === "Novedades") {
+    // Mostrar solo productos con clase "novedad"
+    document.querySelectorAll(".card").forEach(card => {
+      card.style.display = card.classList.contains("novedad") ? "" : "none";
+    });
+    
+    // Ocultar todas las categorías
+    document.querySelectorAll(".categoria").forEach(sec => {
+      sec.style.display = "none";
+    });
+    
+    // Mostrar un título
+    mostrarTituloEspecial("novedad");
+  } else if (cat === "Todos") {
+    // Mostrar todas las categorías y productos
+    document.querySelectorAll(".categoria").forEach(sec=>{
+      sec.style.display = "";
+    });
+    
+    document.querySelectorAll(".card").forEach(card => {
+      card.style.display = "";
+    });
+    
+    // Remover título especial si existe
+    const tituloEspecial = document.getElementById("titulo-especial");
+    if (tituloEspecial) tituloEspecial.remove();
+    
+    // Scroll a la primera categoría
+    const target = document.querySelector(".categoria");
+    if(target){
+      target.scrollIntoView({ behavior:"smooth", block:"start" });
+    }
+  } else {
+    // Filtro normal por categoría
+    document.querySelectorAll(".categoria").forEach(sec=>{
+      sec.style.display = sec.dataset.categoria === cat ? "" : "none";
+    });
 
-  // Scroll suave a la categoría
-  const target = document.querySelector(
-    cat === "Todos" ? ".categoria" : `.categoria[data-categoria="${cat}"]`
-  );
+    // Remover título especial si existe
+    const tituloEspecial = document.getElementById("titulo-especial");
+    if (tituloEspecial) tituloEspecial.remove();
 
-  if(target){
-    target.scrollIntoView({ behavior:"smooth", block:"start" });
+    // Scroll suave a la categoría
+    const target = document.querySelector(`.categoria[data-categoria="${cat}"]`);
+    if(target){
+      target.scrollIntoView({ behavior:"smooth", block:"start" });
+    }
+  }
+}
+
+// Función auxiliar para mostrar título especial
+function mostrarTituloEspecial(tipo) {
+  // Remover anterior si existe
+  const anterior = document.getElementById("titulo-especial");
+  if (anterior) anterior.remove();
+  
+  const titulo = document.createElement("div");
+  titulo.id = "titulo-especial";
+  titulo.className = "category-title";
+  
+  if (tipo === "promocion") {
+    titulo.textContent = "🎁 Promociones Especiales";
+  } else if (tipo === "novedad") {
+    titulo.textContent = "⚡ Novedades";
+  }
+  
+  // Insertar después del nav o antes del primer grid
+  const nav = document.querySelector("nav");
+  if (nav) {
+    nav.parentNode.insertBefore(titulo, nav.nextSibling);
+  } else {
+    document.body.insertBefore(titulo, document.querySelector(".grid"));
   }
 }

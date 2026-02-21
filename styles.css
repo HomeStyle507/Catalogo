@@ -5,6 +5,14 @@
   --wa:#25d366;
   --shadow-soft:0 6px 18px rgba(0,0,0,.12);
   --shadow-hover:0 14px 30px rgba(0,0,0,.18);
+  
+  /* ============ CONTROL DE ESCALA GLOBAL ============ */
+  /* CAMBIAR ESTE VALOR para ajustar tamaños de toda la página:
+     0.7 = muy pequeño    | 0.8 = -20%    | 0.9 = -10%
+     1.0 = normal         | 1.1 = +10%    | 1.25 = +25%
+     1.5 = +50%           | 1.75 = +75%   | 2.0 = muy grande
+  */
+  --scale: 0.85;
 }
 
 *{
@@ -38,11 +46,17 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
+html {
+  /* ESCALA GLOBAL: Multiplica por la variable --scale definida arriba */
+  font-size: calc(17.5px * var(--scale));
+}
+
 body{
   background:var(--bg);
   color:var(--primary);
-  padding-bottom:140px;
+  padding-bottom:120px;
   padding-top: 80px;
+  line-height: 1.6;
 }
 
 /* ================= HEADER MEJORADO ================= */
@@ -62,10 +76,11 @@ body{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: clamp(15px, 3.75vw, 25px) clamp(20px, 5vw, 30px);
   max-width: 1400px;
   margin: 0 auto;
-  gap: 16px;
+  gap: clamp(15px, 3.75vw, 25px);
+  flex-wrap: wrap;
 }
 
 .menu-toggle {
@@ -73,11 +88,15 @@ body{
   border: none;
   color: white;
   cursor: pointer;
-  padding: 8px;
+  padding: clamp(7.5px, 2.5vw, 12.5px);
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: clamp(5px, 1.25vw, 7.5px);
   transition: transform 0.3s ease;
+  min-width: 55px;
+  min-height: 55px;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-toggle:hover {
@@ -85,8 +104,8 @@ body{
 }
 
 .hamburger-line {
-  width: 28px;
-  height: 3px;
+  width: clamp(30px, 7.5vw, 40px);
+  height: clamp(2.5px, 0.625vw, 5px);
   background: white;
   border-radius: 2px;
   transition: all 0.3s ease;
@@ -100,33 +119,76 @@ body{
 }
 
 .logo-img {
-  width: 50px;
-  height: 50px;
+  width: clamp(80px, 15vw, 120px);
+  height: clamp(80px, 15vw, 120px);
   object-fit: contain;
-}
-
-.brand-text h1 {
-  font-size: 1.3rem;
-  letter-spacing: 2px;
-  font-weight: 600;
-  margin: 0;
-  line-height: 1.2;
-}
-
-.brand-text h1 span {
-  color: var(--accent);
-  font-size: 1.5rem;
-  font-weight: 800;
+  flex-shrink: 0;
 }
 
 .brand-text .header-tagline {
-  font-size: 0.75rem;
+  font-size: clamp(1.1rem, 3.5vw, 1.8rem);
   color: var(--accent);
-  font-weight: 500;
-  letter-spacing: 1px;
-  margin: 2px 0 0 0;
+  font-weight: 600;
+  letter-spacing: clamp(0.8px, 0.8vw, 1.5px);
+  margin: 0;
   font-style: italic;
-  opacity: 0.9;
+  opacity: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: absolute;
+  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.brand-text {
+  position: relative;
+  min-height: clamp(2.5rem, 5vw, 4rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.header-tagline.SP1 {
+  opacity: 1;
+  transform: translateY(0);
+  position: relative;
+}
+
+.header-tagline.SP2 {
+  opacity: 0;
+  transform: translateY(10px);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(10px);
+  width: 100%;
+}
+
+.header-tagline.SP1.fade-out {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.header-tagline.SP2.fade-in {
+  opacity: 1;
+  transform: translate(-50%, -50%) translateY(0);
+}
+
+.header-tagline span {
+  display: inline;
+  font-weight: 700;
+}
+
+.header-tagline.SP2 span {
+  font-size: 190%;
+}
+
+.header-tagline b {
+  font-weight: 600;
+  font-style: normal;
 }
 
 .header-actions {
@@ -140,7 +202,7 @@ body{
   border-radius: 50%;
   width: 44px;
   height: 44px;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -157,21 +219,12 @@ body{
 
 @media (min-width: 768px) {
   .logo-img {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .brand-text h1 {
-    font-size: 1.6rem;
-    letter-spacing: 3px;
-  }
-  
-  .brand-text h1 span {
-    font-size: 1.8rem;
+    width: 90px;
+    height: 90px;
   }
   
   .brand-text .header-tagline {
-    font-size: 0.85rem;
+    font-size: 1.3rem;
   }
 }
 
@@ -303,6 +356,58 @@ body{
   visibility: visible;
 }
 
+/* ================= RESPONSIVE MENU ================= */
+@media (max-width: 480px) {
+  .side-menu {
+    width: 85vw;
+    left: -85vw;
+  }
+  
+  .header-container {
+    padding: 10px 12px;
+  }
+  
+  .logo-img {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .brand-text .header-tagline {
+    font-size: 0.95rem;
+  }
+  
+  .icon-button {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .hamburger-line {
+    width: 24px;
+  }
+}
+
+@media (max-width: 360px) {
+  .brand-text .header-tagline {
+    font-size: 0.75rem;
+  }
+  
+  .logo-img {
+    width: clamp(55px, 11vw, 75px);
+    height: clamp(55px, 11vw, 75px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .side-menu {
+    width: 360px;
+    left: -360px;
+  }
+  
+  .header-container {
+    padding: 16px 24px;
+  }
+}
+
 /* ================= OLD HEADER (mantener por compatibilidad) ================= */
 header{
   background:linear-gradient(180deg,#081a33,#0c2b5e);
@@ -335,18 +440,19 @@ header span{
 
 /* ================= SEARCH ================= */
 .search-box{
-  padding:14px;
+  padding: 8px 12px;
   position:relative;
 }
 
 .search-box input{
   width:100%;
-  padding:16px;
+  padding: clamp(10px, 2.5vw, 16px);
   border-radius:20px;
   border:2px solid #d0d0d0;
-  font-size:1rem;
+  font-size: clamp(1.1rem, 2.5vw, 1.375rem);
   outline:none;
   transition: border-color 0.3s;
+  min-height: 42px;
 }
 
 .search-box input:focus {
@@ -358,12 +464,12 @@ header span{
 /* 📱 MÓVIL: scroll horizontal */
 nav{
   display:flex;
-  row-gap: 10px;
-  column-gap: 20px;
+  row-gap: 6px;
+  column-gap: 10px;
   overflow-x:auto;
   overflow-y:hidden;
   scrollbar-width:none;
-  padding:12px;
+  padding: 8px;
   background:white;
   position:sticky;
   top:0;
@@ -378,13 +484,17 @@ nav button{
   border:2px solid var(--accent);
   background:white;
   color:var(--primary);
-  padding:10px 24px;
+  padding: clamp(8px, 2vw, 12px) clamp(14px, 4vw, 24px);
   border-radius:30px;
-  font-size:.8rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
   font-weight:700;
   cursor:pointer;
   white-space:nowrap;
   transition:.25s;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 nav button.active,
@@ -404,11 +514,12 @@ nav button:hover{
 
 /* ================= CATEGORY TITLE ================= */
 .category-title{
-  margin:34px 20px 14px;
-  font-size:1.15rem;
+  margin: clamp(16px, 4vw, 28px) clamp(14px, 3vw, 18px) clamp(8px, 2.5vw, 12px);
+  font-size: clamp(1.2rem, 3.75vw, 1.75rem);
   font-weight:900;
-  border-left:6px solid var(--accent);
-  padding-left:14px;
+  border-left: clamp(5px, 1.25vw, 7.5px) solid var(--accent);
+  padding-left: clamp(10px, 2vw, 16px);
+  word-wrap: break-word;
 }
 
 /* ================= GRID ================= */
@@ -416,8 +527,8 @@ nav button:hover{
 .grid{
   display:grid;
   grid-template-columns:repeat(2, 1fr);
-  gap:12px;
-  padding:14px;
+  gap: clamp(8px, 2.5vw, 16px);
+  padding: clamp(10px, 2.5vw, 16px);
 }
 
 /* 🖥 ESCRITORIO: 5 columnas */
@@ -442,10 +553,11 @@ nav button:hover{
   transition:.3s ease;
   position:relative;
   order:1;
+  cursor: pointer;
 }
 
 .card:hover{
-  transform:translateY(-6px);
+  transform:translateY(-8px);
   box-shadow:var(--shadow-hover);
 }
 
@@ -454,6 +566,12 @@ nav button:hover{
   aspect-ratio:1/1;
   object-fit:cover;
   display:block;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.card:hover img {
+  transform: scale(1.05);
 }
 
 /* ================= CARD AGOTADO ================= */
@@ -484,43 +602,27 @@ nav button:hover{
 
 /* ================= CARD INFO ================= */
 .card-info{
-  padding:14px;
+  padding: clamp(10px, 2.5vw, 16px);
   text-align:center;
 }
 
 .card-info h3{
-  font-size:.8rem;
+  font-size: clamp(0.9rem, 3.125vw, 1.25rem);
   font-weight:700;
-  line-height:1.3;
-  min-height:2.6em;
+  line-height:1.5;
+  max-height: calc(1.5em * 3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
-/* ================= BUTTON ================= */
 .card-info button{
-  margin-top:12px;
-  width:100%;
-  padding:11px;
-  border:none;
-  border-radius:14px;
-  font-size:.75rem;
-  font-weight:900;
-  background:var(--primary);
-  color:white;
-  cursor:pointer;
-  transition:.25s;
-}
-
-.card-info button:hover:not(:disabled){
-  opacity:.9;
-}
-
-.card-info button.selected{
-  background:var(--wa);
-}
-
-.card-info button:disabled{
-  background:#a0a0a0;
-  cursor:not-allowed;
+  display: none;
 }
 
 /* ================= MODAL IMAGEN ================= */
@@ -546,26 +648,30 @@ nav button:hover{
   width:100%;
   overflow:hidden;
   position:relative;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-caja img{
   width:100%;
-  height:300px;
+  height: clamp(312.5px, 62.5vw, 500px);
   object-fit:cover;
   display:block;
 }
 
 .modal-cerrar{
   position:absolute;
-  top:14px;
-  right:14px;
+  top: clamp(15px, 3.75vw, 20px);
+  right: clamp(15px, 3.75vw, 20px);
   background:#c62828;
   color:white;
-  width:40px;
-  height:40px;
+  width: clamp(45px, 12.5vw, 60px);
+  height: clamp(45px, 12.5vw, 60px);
+  min-width: 40px;
+  min-height: 40px;
   border-radius:50%;
   border:none;
-  font-size:24px;
+  font-size: clamp(22.5px, 6.25vw, 35px);
   font-weight:bold;
   cursor:pointer;
   display:flex;
@@ -575,39 +681,59 @@ nav button:hover{
 }
 
 .modal-cuerpo{
-  padding:24px;
+  padding: clamp(22.5px, 5vw, 35px);
 }
 
 .modal-cuerpo h2{
-  margin-bottom:8px;
-  font-size:1.2rem;
+  margin-bottom: clamp(7.5px, 2.5vw, 15px);
+  font-size: clamp(1.25rem, 3.75vw, 1.75rem);
+  word-wrap: break-word;
 }
 
 .modal-cuerpo p{
-  font-size:.95rem;
+  font-size: clamp(1rem, 3.125vw, 1.25rem);
   line-height:1.6;
   color:#444;
-  margin-bottom:20px;
+  margin-bottom: clamp(17.5px, 3.75vw, 25px);
+}
+
+/* Variantes en modal */
+#modalVariantes {
+  display: flex;
+  gap: clamp(10px, 2.5vw, 16px);
+  flex-wrap: wrap;
+  margin-top: clamp(20px, 4vw, 28px);
+  justify-content: center;
+}
+
+#modalVariantes .variant-btn {
+  flex: 0 1 auto;
+  min-width: clamp(80px, 25vw, 120px);
+  padding: clamp(12px, 2.5vw, 16px) clamp(20px, 4vw, 28px);
 }
 
 .modal-precio{
   color:#D4AF37; /* dorado */
   font-weight:800;
-  font-size:1.05rem;
-  margin-bottom:12px;
+  font-size: clamp(1.2rem, 3.75vw, 1.562rem);
+  margin-bottom: clamp(12.5px, 2.5vw, 20px);
 }
 
 .modal-btn{
   width:100%;
-  padding:16px;
+  padding: clamp(17.5px, 3.75vw, 25px);
   border:none;
   border-radius:14px;
   font-weight:900;
-  font-size:.95rem;
+  font-size: clamp(1.06rem, 3.125vw, 1.375rem);
   background:var(--primary);
   color:white;
   cursor:pointer;
   transition:.25s;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-btn:hover{
@@ -621,18 +747,23 @@ nav button:hover{
 /* ================= FLOAT WHATSAPP ================= */
 .float-wa{
   position:fixed;
-  bottom:24px;
+  bottom: clamp(20px, 5vw, 30px);
   left:50%;
   transform:translateX(-50%);
   background:var(--wa);
   color:white;
-  padding:20px 36px;
+  padding: clamp(17.5px, 3.75vw, 30px) clamp(30px, 6.25vw, 50px);
   border-radius:44px;
   font-weight:900;
   box-shadow:0 18px 40px rgba(0,0,0,.35);
   z-index:2000;
   cursor:pointer;
-  font-size:.95rem;
+  font-size: clamp(1.06rem, 3.125vw, 1.375rem);
+  min-height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 90vw;
 }
 
 /* ================= MODAL ELEGIR VENDEDOR (PROFESIONAL) ================= */
@@ -665,30 +796,34 @@ nav button:hover{
 }
 
 .modal-vendedor-caja h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
   font-weight: 800;
   color: var(--primary);
-  margin-bottom: 10px;
+  margin-bottom: clamp(10px, 2.5vw, 17.5px);
 }
 
 .modal-vendedor-caja p {
-  font-size: 0.95rem;
+  font-size: clamp(1rem, 3.125vw, 1.375rem);
   color: var(--text-muted);
-  margin-bottom: 25px;
-  line-height: 1.4;
+  margin-bottom: clamp(22.5px, 5vw, 35px);
+  line-height: 1.5;
 }
 
 /* El contador de tiempo */
 #timer {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--accent);
   color: var(--primary);
-  width: 35px;
-  height: 35px;
-  line-height: 35px;
+  min-width: clamp(40px, 10vw, 56.25px);
+  min-height: clamp(40px, 10vw, 56.25px);
+  width: clamp(40px, 10vw, 56.25px);
+  height: clamp(40px, 10vw, 56.25px);
   border-radius: 50%;
   font-weight: 900;
-  margin: 0 5px;
+  font-size: clamp(1.1rem, 3.125vw, 1.5rem);
+  margin: 0 clamp(5px, 1.25vw, 10px);
   box-shadow: 0 4px 10px rgba(224, 183, 90, 0.4);
 }
 
@@ -704,16 +839,18 @@ nav button:hover{
   background: #f8f9fa;
   border: 2px solid #edf2f7;
   color: var(--primary);
-  padding: 15px;
+  padding: clamp(15px, 3.75vw, 22.5px);
   border-radius: 16px;
-  font-size: 1rem;
+  font-size: clamp(1.06rem, 3.125vw, 1.375rem);
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: clamp(10px, 2.5vw, 15px);
+  min-height: 55px;
+  word-wrap: break-word;
 }
 
 /* Icono de WhatsApp simulado antes del nombre del vendedor */
@@ -722,182 +859,371 @@ nav button:hover{
   font-size: 1.1rem;
 }
 
-/* ================= FOOTER ================= */
+/* ================= FOOTER PROFESIONAL ================= */
 .footer {
-  background: linear-gradient(180deg, #081a33, #0c2b5e);
+  background: linear-gradient(135deg, #0a1929 0%, #081a33 50%, #0c2547 100%);
   color: white;
-  padding: 60px 20px 20px;
-  margin-top: 60px;
+  padding: 0;
+  margin-top: 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), #ff9f2a, var(--accent));
+}
+
+.footer-top {
+  padding: clamp(50px, 8vw, 80px) clamp(20px, 4vw, 40px);
 }
 
 .footer-container {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 45px;
+  gap: clamp(40px, 6vw, 60px);
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 
 @media (min-width: 768px) {
   .footer-container {
     grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
   }
 }
 
 @media (min-width: 1024px) {
   .footer-container {
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 50px;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 60px;
   }
 }
 
-.footer-brand {
-  padding-right: 20px;
+/* Columna de marca */
+.footer-brand-col {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vw, 18px);
 }
 
-@media (max-width: 1023px) {
-  .footer-brand {
-    padding-right: 0;
+.footer-logo {
+  width: clamp(80px, 12vw, 110px);
+  height: clamp(80px, 12vw, 110px);
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.footer-brand-name {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  font-weight: 800;
+  color: white;
+  margin: 0;
+  letter-spacing: 1.5px;
+}
+
+.footer-tagline {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: var(--accent);
+  font-weight: 600;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.footer-desc {
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+  margin: 8px 0 0 0;
+}
+
+/* Títulos de columna */
+.footer-title {
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 0 clamp(20px, 3vw, 28px) 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(224, 183, 90, 0.3);
+  letter-spacing: 0.8px;
+}
+
+/* Redes sociales principales */
+.footer-social-grid {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2.5vw, 18px);
+  margin-bottom: clamp(24px, 4vw, 32px);
+}
+
+.footer-social-item {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.5vw, 18px);
+  padding: clamp(14px, 2.5vw, 18px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.footer-social-item:hover {
+  background: rgba(224, 183, 90, 0.15);
+  border-color: var(--accent);
+  transform: translateX(6px);
+}
+
+.footer-social-icon {
+  width: clamp(40px, 7vw, 50px);
+  height: clamp(40px, 7vw, 50px);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.footer-social-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer-social-label {
+  font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.footer-social-handle {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: white;
+  font-weight: 600;
+}
+
+/* Redes secundarias */
+.footer-social-secondary {
+  margin-top: clamp(20px, 3vw, 28px);
+}
+
+.footer-secondary-title {
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.footer-badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1.5vw, 10px);
+}
+
+.footer-badge {
+  padding: clamp(6px, 1.2vw, 8px) clamp(12px, 2vw, 16px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.footer-badge:hover {
+  background: var(--accent);
+  color: var(--primary);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Contactos WhatsApp */
+.footer-contact-intro {
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 clamp(18px, 3vw, 24px) 0;
+  line-height: 1.5;
+}
+
+.footer-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2vw, 14px);
+}
+
+.footer-contact-item {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 16px);
+  padding: clamp(12px, 2vw, 16px);
+  background: rgba(37, 211, 102, 0.08);
+  border: 1px solid rgba(37, 211, 102, 0.2);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.footer-contact-item:hover {
+  background: rgba(37, 211, 102, 0.15);
+  border-color: var(--wa);
+  transform: translateX(6px);
+}
+
+.footer-contact-icon {
+  font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+  flex-shrink: 0;
+}
+
+.footer-contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer-contact-name {
+  font-size: clamp(0.9rem, 1.8vw, 1rem);
+  color: white;
+  font-weight: 600;
+}
+
+.footer-contact-number {
+  font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* Barra inferior */
+.footer-bottom {
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: clamp(20px, 3vw, 28px) clamp(20px, 4vw, 40px);
+}
+
+.footer-bottom-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(12px, 2vw, 16px);
+}
+
+.footer-copyright {
+  font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-weight: 500;
+}
+
+.footer-location {
+  font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .footer-bottom-content {
+    flex-direction: column;
     text-align: center;
   }
 }
 
-.footer-section h3 {
-  font-size: 1.5rem;
-  margin-bottom: 12px;
-  color: var(--accent);
-  font-weight: 800;
-  letter-spacing: 1px;
+/* ================= NOVEDADES Y PROMOCIONES ================= */
+/* Badge para productos nuevos */
+.card.novedad {
+  position: relative;
+  border-top: 4px solid #ff7b00;
 }
 
-@media (max-width: 767px) {
-  .footer-section h3 {
-    font-size: 1.3rem;
-  }
-}
-
-.footer-slogan {
-  font-size: 1.05rem;
-  font-style: italic;
-  color: var(--accent);
-  margin: 8px 0 16px 0;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-@media (max-width: 767px) {
-  .footer-slogan {
-    font-size: 0.95rem;
-  }
-}
-
-.footer-description {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.75);
-  margin-top: 12px;
-}
-
-.footer-section h4 {
-  font-size: 1.05rem;
-  margin-bottom: 18px;
-  color: var(--accent);
+.card.novedad::after {
+  content: "⚡ NOVEDAD";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #ff7b00, #ff9f2a);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: clamp(0.65rem, 1.5vw, 0.85rem);
   font-weight: 700;
-  border-bottom: 2px solid rgba(255, 123, 0, 0.3);
-  padding-bottom: 8px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(255, 123, 0, 0.4);
+  z-index: 5;
+  animation: pulse-badge 2s ease-in-out infinite;
 }
 
-.footer-section p {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.8);
+/* Badge para productos en promoción */
+.card.promocion {
+  position: relative;
+  border-top: 4px solid #d32f2f;
 }
 
-/* ================= SOCIAL LINKS ================= */
-.social-links {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+.card.promocion::after {
+  content: "🎁 PROMOCIÓN";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #d32f2f, #ff5252);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
+  z-index: 5;
+  animation: pulse-badge 2s ease-in-out infinite;
 }
 
-@media (max-width: 767px) {
-  .social-links {
-    justify-content: center;
+/* Badge con los dos estados (si por alguna razón tiene ambas clases) */
+.card.novedad.promocion::after {
+  content: "✨ OFERTA ESPECIAL";
+  background: linear-gradient(135deg, #ff7b00, #d32f2f);
+}
+
+/* Animación de pulso para los badges */
+@keyframes pulse-badge {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.95;
   }
 }
 
-.social-link-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 16px 14px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  color: white;
-  transition: all 0.3s ease;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  text-decoration: none;
-  min-width: 90px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+/* Pequeño detalle visual para las imágenes de productos especiales */
+.card.novedad img,
+.card.promocion img {
+  position: relative;
 }
 
-.social-link-card:hover {
-  background: var(--accent);
-  color: var(--primary);
-  transform: translateY(-5px);
-  border-color: var(--accent);
-  box-shadow: 0 8px 20px rgba(255, 123, 0, 0.4);
+/* Hover mejorado para productos especiales */
+.card.novedad:hover,
+.card.promocion:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
 }
 
-.social-icon-img {
-  width: 45px;
-  height: 45px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-  transition: filter 0.3s ease;
-}
-
-.social-link-card:hover .social-icon-img {
-  filter: brightness(0) invert(0);
-}
-
-.social-username {
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-align: center;
-  white-space: nowrap;
-  letter-spacing: 0.3px;
-}
-
-/* Legacy support for old icon styles */
-.social-links a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 45px;
-  height: 45px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  color: white;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-}
-
-.social-links a:hover {
-  background: var(--accent);
-  color: var(--primary);
-  transform: translateY(-3px);
-  border-color: var(--accent);
-}
-
-.social-icon {
-  width: 24px;
-  height: 24px;
+/* Responsive - Ajustar badge en móviles */
+@media (max-width: 480px) {
+  .card.novedad::after,
+  .card.promocion::after {
+    padding: 5px 10px;
+    font-size: 0.65rem;
+    top: 6px;
+    right: 6px;
+  }
 }
 
 /* ================= WHATSAPP LIST ================= */
