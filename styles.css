@@ -600,10 +600,36 @@ nav button:hover{
   text-shadow:0 2px 4px rgba(0,0,0,0.3);
 }
 
+/* ================= CARD SELECCIONADO ================= */
+.card.seleccionado{
+  border: 2px solid #22c55e;
+  box-shadow: 0 0 0 1px #22c55e;
+}
+
+.card.seleccionado h3{
+  color: #22c55e;
+}
+
 /* ================= CARD INFO ================= */
 .card-info{
   padding: clamp(10px, 2.5vw, 16px);
   text-align:center;
+}
+
+.card-label{
+  font-size: clamp(0.85rem, 3vw, 1.1rem);
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  padding: 0;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.card-label-promo{
+  color: #d32f2f;
+}
+
+.card-label-new{
+  color: #1976d2;
 }
 
 .card-info h3{
@@ -619,6 +645,20 @@ nav button:hover{
   line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+}
+
+.card-price{
+  font-size: clamp(1.1rem, 3.75vw, 1.5rem);
+  font-weight: 700;
+  color: #e0b75a;
+  margin: 0 0 8px 0;
+  padding: 0;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.card.promocion .card-info{
+  border-top: 3px solid #e0b75a;
+  padding-top: clamp(8px, 2vw, 14px);
 }
 
 .card-info button{
@@ -644,8 +684,9 @@ nav button:hover{
 .modal-caja{
   background:white;
   border-radius:22px;
-  max-width:480px;
+  max-width:90vw;
   width:100%;
+  max-width: min(90vw, 800px);
   overflow:hidden;
   position:relative;
   max-height: 90vh;
@@ -654,9 +695,12 @@ nav button:hover{
 
 .modal-caja img{
   width:100%;
-  height: clamp(312.5px, 62.5vw, 500px);
-  object-fit:cover;
+  height: auto;
+  min-height: clamp(250px, 40vw, 400px);
+  max-height: 70vh;
+  object-fit:contain;
   display:block;
+  background: #f5f5f5;
 }
 
 .modal-cerrar{
@@ -1270,4 +1314,15 @@ nav button:hover{
   margin: 0;
   font-weight: 500;
   letter-spacing: 0.5px;
+}
+
+/* ================= ESTILOS PARA PROMOCIONES Y NOVEDADES (NUEVAS CLASES) ================= */
+.card.promo {
+  position: relative;
+  border-top: 4px solid #d32f2f;
+}
+
+.card.new {
+  position: relative;
+  border-top: 4px solid #1976d2;
 }

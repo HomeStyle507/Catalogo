@@ -40,6 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Iniciar alternancia de eslogan
   iniciarAlternanciaEslogan();
+  
+  // Aplicar filtrado de agotados al cargar la página
+  filtrarCategoria("Todos", null);
+  
+  // Inicializar productos promocionales (mostrar precio)
+  inicializarProductosPromocionales();
 });
 
 /* ================= ALTERNANCIA DE ESLOGAN ================= */
@@ -65,6 +71,47 @@ function iniciarAlternanciaEslogan() {
   }, 8000);
 }
 
+/* ================= INICIALIZAR PRODUCTOS PROMOCIONALES Y NOVEDADES ================= */
+function inicializarProductosPromocionales() {
+  const cards = document.querySelectorAll('.card');
+  
+  cards.forEach(card => {
+    const cardInfo = card.querySelector('.card-info');
+    const h3 = card.querySelector('.card-info h3');
+    
+    if (!cardInfo) return;
+    
+    // Remover elemento anterior si existe
+    const elementoAnterior = cardInfo.querySelector('.card-label');
+    if (elementoAnterior) elementoAnterior.remove();
+    
+    // Buscar productos con clase "promo"
+    if (card.classList.contains('promo')) {
+      const labelElement = document.createElement('p');
+      labelElement.className = 'card-label card-label-promo';
+      labelElement.textContent = 'Oferta';
+      
+      if (h3) {
+        cardInfo.insertBefore(labelElement, h3);
+      } else {
+        cardInfo.prepend(labelElement);
+      }
+    }
+    // Buscar productos con clase "new"
+    else if (card.classList.contains('new')) {
+      const labelElement = document.createElement('p');
+      labelElement.className = 'card-label card-label-new';
+      labelElement.textContent = 'Nuevo';
+      
+      if (h3) {
+        cardInfo.insertBefore(labelElement, h3);
+      } else {
+        cardInfo.prepend(labelElement);
+      }
+    }
+  });
+}
+
 /* ================= CONFIGURAR EVENT LISTENERS ================= */
 function configurarEventListeners() {
   // Buscador
@@ -82,6 +129,55 @@ function configurarEventListeners() {
       }
     });
   });
+  
+  // Toggle de columnas del grid
+  const toggleGridBtn = document.getElementById("toggleGridColumns");
+  if (toggleGridBtn) {
+    toggleGridBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const grids = document.querySelectorAll(".grid");
+      const toggleText = document.getElementById("gridToggleText");
+      
+      // Verificar el estado del primer grid
+      const isThreeColumns = grids[0]?.style.gridTemplateColumns === "repeat(3, 1fr)";
+      
+      if (isThreeColumns) {
+        // Volver a 2 columnas
+        grids.forEach(grid => {
+          grid.style.gridTemplateColumns = "";
+        });
+        toggleText.textContent = "Ver 3 columnas";
+        localStorage.setItem("gridColumns", "2");
+      } else {
+        // Cambiar a 3 columnas
+        grids.forEach(grid => {
+          grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+        });
+        toggleText.textContent = "Ver 2 columnas";
+        localStorage.setItem("gridColumns", "3");
+      }
+    });
+  }
+  
+  // Restaurar estado del grid
+  const savedGridColumns = localStorage.getItem("gridColumns");
+  if (savedGridColumns === "3") {
+    const grids = document.querySelectorAll(".grid");
+    const toggleText = document.getElementById("gridToggleText");
+    grids.forEach(grid => {
+      grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+    });
+    if (toggleText) toggleText.textContent = "Ver 2 columnas";
+  }
+  
+  // Botón Ver Ubicación
+  const openLocationBtn = document.getElementById("openLocationVideo");
+  if (openLocationBtn) {
+    openLocationBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      abrirModalVideo();
+    });
+  }
   
   // Menú hamburguesa
   const menuToggle = document.getElementById("menuToggle");
@@ -288,6 +384,34 @@ document.addEventListener("click", (e) => {
   }
 });
 
+/* ================= FUNCIONES MODAL VIDEO UBICACIÓN ================= */
+function abrirModalVideo(){
+  const modalVideo = document.getElementById("modalVideo");
+  if(modalVideo){
+    modalVideo.style.display = "flex";
+    cerrarMenu(); // Cerrar menú hamburguesa si está abierto
+  }
+}
+
+function cerrarModalVideo(){
+  const modalVideo = document.getElementById("modalVideo");
+  const video = document.getElementById("videoUbicacion");
+  if(modalVideo){
+    modalVideo.style.display = "none";
+  }
+  if(video){
+    video.pause();
+  }
+}
+
+// Cerrar modal de video al hacer clic fuera
+document.addEventListener("click", (e) => {
+  const modVid = document.getElementById("modalVideo");
+  if(e.target === modVid){
+    cerrarModalVideo();
+  }
+});
+
 /* ================= AGREGAR DESDE MODAL ================= */
 function agregarDelModal(){
   if(!productoActual) return;
@@ -308,23 +432,23 @@ function agregarDelModal(){
   actualizarContador(true);
   actualizarBotonWA();
   
-  // Actualizar estado del botón en el modal
+  // Actualizar estado del botón en el modal y en la card
   const modalBtn = document.getElementById("modalBtn");
   if(seleccion.includes(productoActual)){
     modalBtn.classList.add("selected");
-    modalBtn.textContent = "Eliminar de consulta";
+    modalBtn.textContent = "Seleccionado";
+    if(cardActual) cardActual.classList.add("seleccionado");
   } else {
     modalBtn.classList.remove("selected");
     modalBtn.textContent = "Agregar a consulta";
+    if(cardActual) cardActual.classList.remove("seleccionado");
   }
 
-  // Actualizar estado en la card
+  // Actualizar estado en todas las cards
   restaurarSeleccion();
   
-  // Cerrar modal SOLO si se está agregando a consulta (no si se elimina)
-  if(esAgregando){
-    setTimeout(() => cerrarModal(), 300);
-  }
+  // Cerrar modal al agregar o eliminar
+  setTimeout(() => cerrarModal(), 300);
 }
 
 /* ================= SELECCIONAR PRODUCTO ================= */
@@ -337,10 +461,12 @@ function toggleProducto(btn){
 
   if(seleccion.includes(nombre)){
     seleccion = seleccion.filter(p => p !== nombre);
+    card.classList.remove("seleccionado");
     btn.classList.remove("selected");
     btn.textContent = "Consultar";
   } else {
     seleccion.push(nombre);
+    card.classList.add("seleccionado");
     btn.classList.add("selected");
     btn.textContent = "Seleccionado";
   }
@@ -365,16 +491,19 @@ function restaurarSeleccion(){
     if(agotado){
       btn.disabled = true;
       btn.classList.remove("selected");
+      card.classList.remove("seleccionado");
       btn.textContent = "Agotado";
       btn.style.backgroundColor = "#a0a0a0";
     } else if(seleccion.includes(nombre)){
       btn.disabled = false;
       btn.classList.add("selected");
+      card.classList.add("seleccionado");
       btn.textContent = "Seleccionado";
       btn.style.backgroundColor = "";
     } else {
       btn.disabled = false;
       btn.classList.remove("selected");
+      card.classList.remove("seleccionado");
       btn.textContent = "Consultar";
       btn.style.backgroundColor = "";
     }
@@ -556,39 +685,67 @@ function filtrarCategoria(cat, btn){
 
   // Manejar categorías especiales: Promociones y Novedades
   if (cat === "Promociones") {
-    // Mostrar solo productos con clase "promocion"
-    document.querySelectorAll(".card").forEach(card => {
-      card.style.display = card.classList.contains("promocion") ? "" : "none";
-    });
-    
-    // Ocultar todas las categorías
+    // Mostrar todas las categorías
     document.querySelectorAll(".categoria").forEach(sec => {
-      sec.style.display = "none";
+      sec.style.display = "";
     });
     
-    // Mostrar un título
+    // Ocultar títulos de categoría
+    document.querySelectorAll(".category-title").forEach(title => {
+      title.style.display = "none";
+    });
+    
+    // Mostrar solo productos con clase "promo"
+    document.querySelectorAll(".card").forEach(card => {
+      card.style.display = card.classList.contains("promo") ? "" : "none";
+    });
+    
+    // Mostrar un título especial
     mostrarTituloEspecial("promocion");
+    
+    // Scroll al título especial
+    setTimeout(() => {
+      const titulo = document.getElementById("titulo-especial");
+      if (titulo) titulo.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
   } else if (cat === "Novedades") {
-    // Mostrar solo productos con clase "novedad"
-    document.querySelectorAll(".card").forEach(card => {
-      card.style.display = card.classList.contains("novedad") ? "" : "none";
-    });
-    
-    // Ocultar todas las categorías
+    // Mostrar todas las categorías
     document.querySelectorAll(".categoria").forEach(sec => {
-      sec.style.display = "none";
+      sec.style.display = "";
     });
     
-    // Mostrar un título
+    // Ocultar títulos de categoría
+    document.querySelectorAll(".category-title").forEach(title => {
+      title.style.display = "none";
+    });
+    
+    // Mostrar solo productos con clase "new"
+    document.querySelectorAll(".card").forEach(card => {
+      card.style.display = card.classList.contains("new") ? "" : "none";
+    });
+    
+    // Mostrar un título especial
     mostrarTituloEspecial("novedad");
+    
+    // Scroll al título especial
+    setTimeout(() => {
+      const titulo = document.getElementById("titulo-especial");
+      if (titulo) titulo.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
   } else if (cat === "Todos") {
-    // Mostrar todas las categorías y productos
+    // Mostrar todas las categorías
     document.querySelectorAll(".categoria").forEach(sec=>{
       sec.style.display = "";
     });
     
+    // Mostrar títulos de categoría
+    document.querySelectorAll(".category-title").forEach(title => {
+      title.style.display = "";
+    });
+    
     document.querySelectorAll(".card").forEach(card => {
-      card.style.display = "";
+      // Ocultar los agotados en la vista "Todos" para no sobrecargar
+      card.style.display = card.classList.contains("agotado") ? "none" : "";
     });
     
     // Remover título especial si existe
@@ -604,6 +761,16 @@ function filtrarCategoria(cat, btn){
     // Filtro normal por categoría
     document.querySelectorAll(".categoria").forEach(sec=>{
       sec.style.display = sec.dataset.categoria === cat ? "" : "none";
+    });
+    
+    // Mostrar títulos de categoría
+    document.querySelectorAll(".category-title").forEach(title => {
+      title.style.display = "";
+    });
+
+    // Mostrar todos los productos (incluyendo agotados) en categorías específicas
+    document.querySelectorAll(".card").forEach(card => {
+      card.style.display = "";
     });
 
     // Remover título especial si existe
