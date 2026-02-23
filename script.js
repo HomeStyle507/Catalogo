@@ -201,6 +201,16 @@ function configurarEventListeners() {
   if (menuOverlay) {
     menuOverlay.addEventListener("click", cerrarMenu);
   }
+
+  // Cerrar modal de vendedores al tocar fuera del cuadro
+  const modalVendedor = document.getElementById("modalVendedor");
+  if (modalVendedor) {
+    modalVendedor.addEventListener("click", (e) => {
+      if (e.target === modalVendedor) {
+        cancelarModalVendedor();
+      }
+    });
+  }
   
   // Enlaces del menú lateral
   document.querySelectorAll(".menu-link").forEach(link => {
@@ -583,6 +593,12 @@ function finalizarYEnviar(numeroDestino) {
     const numeroLimpio = numeroDestino.replace('-', '');
     window.open(`https://wa.me/507${numeroLimpio}?text=${encodeURIComponent(msg)}`, "_blank");
 }
+
+  function cancelarModalVendedor() {
+    clearInterval(intervaloTimer);
+    const modalVen = document.getElementById("modalVendedor");
+    if (modalVen) modalVen.style.display = "none";
+  }
 
 /* ================= BUSCADOR ================= */
 /* ================= DISTANCIA DE LEVENSHTEIN (FUZZY SEARCH) ================= */

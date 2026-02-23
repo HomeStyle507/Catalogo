@@ -839,16 +839,40 @@ nav button:hover{
   border: 1px solid rgba(255,255,255,0.1);
 }
 
+.modal-vendedor-cerrar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: #e53935;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(229, 57, 53, 0.35);
+}
+
+.modal-vendedor-cerrar:hover {
+  background: #c62828;
+}
+
 .modal-vendedor-caja h3 {
   font-size: clamp(1.5rem, 5vw, 2.25rem);
   font-weight: 800;
-  color: var(--primary);
+  color: white;
   margin-bottom: clamp(10px, 2.5vw, 17.5px);
 }
 
 .modal-vendedor-caja p {
   font-size: clamp(1rem, 3.125vw, 1.375rem);
-  color: var(--text-muted);
+  color: white;
   margin-bottom: clamp(22.5px, 5vw, 35px);
   line-height: 1.5;
 }
@@ -901,6 +925,17 @@ nav button:hover{
 .btn-vendedor::before {
   content: "💬";
   font-size: 1.1rem;
+}
+
+.btn-cancelar {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: var(--primary);
+  margin-top: 8px;
+}
+
+.btn-cancelar::before {
+  content: "x";
 }
 
 /* ================= FOOTER PROFESIONAL ================= */
