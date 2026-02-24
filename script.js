@@ -1,10 +1,10 @@
 // 1. Lista de vendedores
 const VENDEDORES = [
     { nombre: "Christian", numero: "6977-8350" },
-    { nombre: "Angel", numero: "6260-6548" },
-    { nombre: "Génesis", numero: "6171-3520" },
     { nombre: "Yoli", numero: "6168-3538" },
-    { nombre: "F/M", numero: "6236-4158" }
+    { nombre: "Angel", numero: "6260-6548" },
+    { nombre: "Mayerli", numero: "6236-4158" },
+    { nombre: "Génesis", numero: "6171-3520" }
 ];
 
 // 2. Variables de estado
