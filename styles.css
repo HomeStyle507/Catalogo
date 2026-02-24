@@ -600,6 +600,34 @@ nav button:hover{
   text-shadow:0 2px 4px rgba(0,0,0,0.3);
 }
 
+/* ================= CARD PRÓXIMAMENTE ================= */
+.card.proxima,
+.card.proximo{
+  opacity:.65;
+  position:relative;
+  order:2;
+}
+
+.card.proxima::before,
+.card.proximo::before{
+  content:"PRÓXIMAMENTE";
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%) rotate(-25deg);
+  background:#facc15;
+  color:#1f2937;
+  padding:12px 40px;
+  font-weight:900;
+  font-size:1.8rem;
+  white-space:nowrap;
+  z-index:10;
+  letter-spacing:3px;
+  box-shadow:0 4px 12px rgba(250, 204, 21, 0.45);
+  border-radius:4px;
+  text-shadow:none;
+}
+
 /* ================= CARD SELECCIONADO ================= */
 .card.seleccionado{
   border: 2px solid #22c55e;

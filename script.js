@@ -583,11 +583,19 @@ function finalizarYEnviar(numeroDestino) {
     clearInterval(intervaloTimer);
     document.getElementById("modalVendedor").style.display = "none";
 
-    let msg = "¡Hola Home Style! 👋\nMe gustaría consultar:\n\n";
-    seleccion.forEach((prod, i) => {
-        msg += `• ${prod}\n`;
-    });
-    msg += `\nGracias.`;
+  const catalogoUrl = "https://homestyle507.github.io/Catalogo/";
+  const listaProductos = seleccion.map((prod, i) => `${i + 1}. ${prod}`).join("\n");
+
+  const msg = [
+    catalogoUrl,
+    "",
+    "Hola, equipo de Home Style.",
+    "",
+    `Quisiera cotizar ${seleccion.length} producto(s):`,
+    listaProductos,
+    "",
+    "Gracias. Quedo atento(a)."
+  ].join("\n");
 
     // Eliminar guion y agregar 507 para la URL de WhatsApp
     const numeroLimpio = numeroDestino.replace('-', '');
