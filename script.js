@@ -3,7 +3,7 @@ const VENDEDORES = [
     { nombre: "Christian", numero: "6977-8350" },
     { nombre: "Yoli", numero: "6168-3538" },
     { nombre: "Angel", numero: "6260-6548" },
-    { nombre: "Mayerli", numero: "6236-4158" },
+    { nombre: "Mayerlis", numero: "6236-4158" },
     { nombre: "Génesis", numero: "6171-3520" }
 ];
 
@@ -248,6 +248,28 @@ function configurarEventListeners() {
       }
     });
   }
+
+  // Abrir collage al tocar/clic en la imagen del modal de producto
+  const modalImg = document.getElementById("modalImg");
+  if (modalImg) {
+    modalImg.style.cursor = "zoom-in";
+    modalImg.addEventListener("click", abrirModalCollage);
+    modalImg.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        abrirModalCollage();
+      }
+    });
+  }
+
+  const modalCollage = document.getElementById("modalCollage");
+  if (modalCollage) {
+    modalCollage.addEventListener("click", (e) => {
+      if (e.target === modalCollage) {
+        cerrarModalCollage();
+      }
+    });
+  }
 }
 
 /* ================= CARRUSEL EN CARTAS ================= */
@@ -331,13 +353,23 @@ function abrirModal(img){
     if(imgs.length){
       window.modalImages = imgs;
       window.modalIndex = 0;
-      // mostrar la primera imagen del conjunto
-      document.getElementById("modalImg").src = window.modalImages[0];
+
+      const srcActual = img.getAttribute("src") || img.src || "";
+      const indexDesdeCard = window.modalImages.findIndex(ruta => {
+        if (!ruta || !srcActual) return false;
+        return ruta === srcActual || srcActual.includes(ruta);
+      });
+      if (indexDesdeCard >= 0) {
+        window.modalIndex = indexDesdeCard;
+      }
+
+      // mostrar la imagen actual según el índice calculado
+      mostrarImagenModal(window.modalIndex);
       // iniciar rotación automática solo si hay más de una imagen
       if(window.modalImages.length > 1){
         window.modalInterval = setInterval(()=>{
           window.modalIndex = (window.modalIndex + 1) % window.modalImages.length;
-          document.getElementById("modalImg").src = window.modalImages[window.modalIndex];
+          mostrarImagenModal(window.modalIndex);
         }, 2500);
       } else {
         // asegurar que no haya interval activo
@@ -378,6 +410,7 @@ function abrirModal(img){
 /* ================= CERRAR MODAL ================= */
 function cerrarModal(){
   document.getElementById("modalImagen").classList.remove("activo");
+  cerrarModalCollage();
   productoActual = null;
   // limpiar rotación automática si existe
   if(window.modalInterval){
@@ -831,5 +864,51 @@ function mostrarTituloEspecial(tipo) {
     nav.parentNode.insertBefore(titulo, nav.nextSibling);
   } else {
     document.body.insertBefore(titulo, document.querySelector(".grid"));
+  }
+}
+
+function mostrarImagenModal(index){
+  if(!window.modalImages || !window.modalImages.length) return;
+
+  const total = window.modalImages.length;
+  const indexNormalizado = ((index % total) + total) % total;
+  window.modalIndex = indexNormalizado;
+
+  const modalImg = document.getElementById("modalImg");
+  if(!modalImg) return;
+
+  modalImg.src = window.modalImages[indexNormalizado];
+}
+
+function abrirModalCollage(){
+  if(!window.modalImages || !window.modalImages.length) return;
+
+  const modalCollage = document.getElementById("modalCollage");
+  const modalCollageGrid = document.getElementById("modalCollageGrid");
+  if(!modalCollage || !modalCollageGrid) return;
+
+  modalCollageGrid.innerHTML = "";
+
+  window.modalImages.forEach((src, index) => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = `${productoActual || "Producto"} - imagen ${index + 1}`;
+    img.loading = "lazy";
+    img.className = "modal-collage-item";
+    img.addEventListener("click", () => {
+      window.modalIndex = index;
+      mostrarImagenModal(index);
+      cerrarModalCollage();
+    });
+    modalCollageGrid.appendChild(img);
+  });
+
+  modalCollage.classList.add("activo");
+}
+
+function cerrarModalCollage(){
+  const modalCollage = document.getElementById("modalCollage");
+  if(modalCollage){
+    modalCollage.classList.remove("activo");
   }
 }
