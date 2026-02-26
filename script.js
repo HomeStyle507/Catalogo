@@ -7,6 +7,23 @@ const VENDEDORES = [
     { nombre: "Génesis", numero: "6171-3520" }
 ];
 
+const DEFAULT_CONFIG = {
+  modoRevendedor: false,
+  vendedorFijo: null,
+  numeroFijo: null,
+  requerirClaveDiaria: false,
+  secretDiario: "HS507",
+  paramClave: "k"
+};
+
+const APP_CONFIG = {
+  ...DEFAULT_CONFIG,
+  ...(window.CATALOGO_CONFIG || {})
+};
+
+let categoriaBaseActual = "Todos";
+let filtroSubcategoriaActual = null;
+
 // 2. Variables de estado
 let seleccion = JSON.parse(localStorage.getItem("seleccion")) || [];
 let productoActual = null; // <--- ESTA ES LA QUE FALTABA
@@ -27,6 +44,12 @@ function cerrarMenu() {
 
 /* ================= INICIALIZAR ================= */
 document.addEventListener("DOMContentLoaded", () => {
+  const accesoPermitido = validarAccesoPorClaveDiaria();
+  if (!accesoPermitido) {
+    return;
+  }
+
+  aplicarConfiguracionUI();
   restaurarSeleccion();
   actualizarContador();
   actualizarBotonWA();
@@ -46,7 +69,78 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Inicializar productos promocionales (mostrar precio)
   inicializarProductosPromocionales();
+
+  if (APP_CONFIG.modoRevendedor) {
+    evaluarPreciosRevendedor();
+  }
 });
+
+function obtenerClaveDiariaEsperada() {
+  const fecha = new Date();
+  const y = fecha.getFullYear();
+  const inicio = new Date(fecha.getFullYear(), 0, 0);
+  const diff = fecha - inicio;
+  const day = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const semilla = `${APP_CONFIG.secretDiario}-${y}-${day}`;
+
+  let hash = 0;
+  for (let i = 0; i < semilla.length; i++) {
+    hash = ((hash << 5) - hash) + semilla.charCodeAt(i);
+    hash |= 0;
+  }
+
+  const codigo = Math.abs(hash % 100000);
+  return String(codigo).padStart(5, "0");
+}
+
+function validarAccesoPorClaveDiaria() {
+  if (!APP_CONFIG.requerirClaveDiaria) return true;
+
+  const params = new URLSearchParams(window.location.search);
+  const claveRecibida = (params.get(APP_CONFIG.paramClave) || "").trim();
+  const claveEsperada = obtenerClaveDiariaEsperada();
+
+  if (/^\d{5}$/.test(claveRecibida) && claveRecibida === claveEsperada) {
+    return true;
+  }
+
+  document.body.innerHTML = `
+    <main style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#081a33;color:#ffffff;text-align:center;">
+      <section style="max-width:520px;background:#0c2b5e;border:2px solid #e0b75a;border-radius:16px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.35)">
+        <h1 style="margin:0 0 10px 0;color:#e0b75a;font-size:1.8rem;">Acceso restringido</h1>
+        <p style="margin:0;line-height:1.6;">Este enlace requiere una clave diaria de 5 dígitos válida. Solicita la URL actualizada del día.</p>
+      </section>
+    </main>
+  `;
+
+  return false;
+}
+
+function aplicarConfiguracionUI() {
+  if (!APP_CONFIG.modoRevendedor) return;
+
+  document.body.classList.add("modo-revendedor");
+  const enlacesWhatsApp = document.querySelectorAll('a[href*="wa.me/"]');
+  enlacesWhatsApp.forEach(link => {
+    if (APP_CONFIG.numeroFijo) {
+      link.href = `https://wa.me/507${APP_CONFIG.numeroFijo.replace(/\D/g, "")}`;
+    }
+    if (APP_CONFIG.vendedorFijo) {
+      link.setAttribute("aria-label", `WhatsApp ${APP_CONFIG.vendedorFijo}`);
+    }
+  });
+}
+
+function evaluarPreciosRevendedor() {
+  document.querySelectorAll(".card").forEach(card => {
+    const precio = (card.dataset.precio || "").trim();
+    if (!precio) {
+      card.classList.add("precio-faltante");
+    } else {
+      card.classList.remove("precio-faltante");
+    }
+  });
+}
 
 /* ================= ALTERNANCIA DE ESLOGAN ================= */
 function iniciarAlternanciaEslogan() {
@@ -82,32 +176,30 @@ function inicializarProductosPromocionales() {
     if (!cardInfo) return;
     
     // Remover elemento anterior si existe
-    const elementoAnterior = cardInfo.querySelector('.card-label');
-    if (elementoAnterior) elementoAnterior.remove();
-    
-    // Buscar productos con clase "promo"
-    if (card.classList.contains('promo')) {
-      const labelElement = document.createElement('p');
+    cardInfo.querySelectorAll('.card-label').forEach(label => label.remove());
+
+    const esPromo = card.classList.contains('promo');
+    const esNuevo = card.classList.contains('new');
+
+    if (!esPromo && !esNuevo) return;
+
+    const labelElement = document.createElement('p');
+
+    if (esPromo && esNuevo) {
+      labelElement.className = 'card-label card-label-combo';
+      labelElement.textContent = 'Oferta + Nuevo';
+    } else if (esPromo) {
       labelElement.className = 'card-label card-label-promo';
       labelElement.textContent = 'Oferta';
-      
-      if (h3) {
-        cardInfo.insertBefore(labelElement, h3);
-      } else {
-        cardInfo.prepend(labelElement);
-      }
-    }
-    // Buscar productos con clase "new"
-    else if (card.classList.contains('new')) {
-      const labelElement = document.createElement('p');
+    } else {
       labelElement.className = 'card-label card-label-new';
       labelElement.textContent = 'Nuevo';
-      
-      if (h3) {
-        cardInfo.insertBefore(labelElement, h3);
-      } else {
-        cardInfo.prepend(labelElement);
-      }
+    }
+
+    if (h3) {
+      cardInfo.insertBefore(labelElement, h3);
+    } else {
+      cardInfo.prepend(labelElement);
     }
   });
 }
@@ -579,6 +671,11 @@ function actualizarBotonWA(){
 
 function enviarWA() {
     if (!seleccion.length) return;
+
+    if (APP_CONFIG.numeroFijo) {
+      finalizarYEnviar(APP_CONFIG.numeroFijo);
+      return;
+    }
     
     // Mostrar el modal de vendedores
     const modalVen = document.getElementById("modalVendedor");
@@ -614,9 +711,12 @@ function enviarWA() {
 
 function finalizarYEnviar(numeroDestino) {
     clearInterval(intervaloTimer);
-    document.getElementById("modalVendedor").style.display = "none";
+    const modal = document.getElementById("modalVendedor");
+    if (modal) {
+      modal.style.display = "none";
+    }
 
-  const catalogoUrl = "https://homestyle507.github.io/Catalogo/";
+  const catalogoUrl = window.location.href;
   const listaProductos = seleccion.map((prod, i) => `${i + 1}. ${prod}`).join("\n");
 
   const msg = [
@@ -727,6 +827,24 @@ function filtrar(){
 /* ================= FILTRO POR CATEGORÍA ================= */
 function filtrarCategoria(cat, btn){
   if (!cat) return; // Validación de seguridad
+
+  const categoriasBase = new Set([
+    "Todos", "Forros", "Comedor", "Sábanas", "Alfombras", "Electrónicos", "Almohadas", "Fragancias", "Frazadas", "Toallas", "Mochilas", "Carteras", "Baño", "Cortinas", "Accesorios", "Otros"
+  ]);
+
+  const filtrosSubcategoria = {
+    "Promociones": card => card.classList.contains("promo"),
+    "Novedades": card => card.classList.contains("new"),
+    "Proximamente": card => card.classList.contains("proximo") || card.classList.contains("proxima"),
+    "Agotados": card => card.classList.contains("agotado")
+  };
+
+  if (categoriasBase.has(cat)) {
+    categoriaBaseActual = cat;
+    filtroSubcategoriaActual = null;
+  } else if (filtrosSubcategoria[cat]) {
+    filtroSubcategoriaActual = cat;
+  }
   
   document.getElementById("search").value = "";
 
@@ -740,105 +858,74 @@ function filtrarCategoria(cat, btn){
     btn.setAttribute("aria-pressed", "true");
   }
 
-  // Manejar categorías especiales: Promociones y Novedades
-  if (cat === "Promociones") {
-    // Mostrar todas las categorías
-    document.querySelectorAll(".categoria").forEach(sec => {
-      sec.style.display = "";
-    });
-    
-    // Ocultar títulos de categoría
-    document.querySelectorAll(".category-title").forEach(title => {
+  const tituloEspecial = document.getElementById("titulo-especial");
+  if (tituloEspecial) tituloEspecial.remove();
+
+  const filtroActivo = filtroSubcategoriaActual && filtrosSubcategoria[filtroSubcategoriaActual]
+    ? filtrosSubcategoria[filtroSubcategoriaActual]
+    : null;
+
+  const baseEsTodos = categoriaBaseActual === "Todos";
+  const mostrarAgotadosEnTodos = false;
+
+  document.querySelectorAll(".categoria").forEach(sec => {
+    const esCategoriaBase = baseEsTodos || sec.dataset.categoria === categoriaBaseActual;
+    sec.style.display = esCategoriaBase ? "" : "none";
+  });
+
+  document.querySelectorAll(".category-title").forEach(title => {
+    if (filtroActivo && (filtroSubcategoriaActual === "Promociones" || filtroSubcategoriaActual === "Novedades" || filtroSubcategoriaActual === "Proximamente")) {
       title.style.display = "none";
-    });
-    
-    // Mostrar solo productos con clase "promo"
-    document.querySelectorAll(".card").forEach(card => {
-      card.style.display = card.classList.contains("promo") ? "" : "none";
-    });
-    
-    // Mostrar un título especial
+    } else {
+      title.style.display = "";
+    }
+  });
+
+  document.querySelectorAll(".card").forEach(card => {
+    const sec = card.closest(".categoria");
+    const dentroBase = sec && (baseEsTodos || sec.dataset.categoria === categoriaBaseActual);
+
+    if (!dentroBase) {
+      card.style.display = "none";
+      return;
+    }
+
+    if (filtroActivo) {
+      if (filtroSubcategoriaActual === "Agotados" && baseEsTodos) {
+        card.style.display = "none";
+      } else {
+        card.style.display = filtroActivo(card) ? "" : "none";
+      }
+      return;
+    }
+
+    if (baseEsTodos && !mostrarAgotadosEnTodos && card.classList.contains("agotado")) {
+      card.style.display = "none";
+      return;
+    }
+
+    card.style.display = "";
+  });
+
+  if (filtroSubcategoriaActual === "Promociones") {
     mostrarTituloEspecial("promocion");
-    
-    // Scroll al título especial
-    setTimeout(() => {
-      const titulo = document.getElementById("titulo-especial");
-      if (titulo) titulo.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
-  } else if (cat === "Novedades") {
-    // Mostrar todas las categorías
-    document.querySelectorAll(".categoria").forEach(sec => {
-      sec.style.display = "";
-    });
-    
-    // Ocultar títulos de categoría
-    document.querySelectorAll(".category-title").forEach(title => {
-      title.style.display = "none";
-    });
-    
-    // Mostrar solo productos con clase "new"
-    document.querySelectorAll(".card").forEach(card => {
-      card.style.display = card.classList.contains("new") ? "" : "none";
-    });
-    
-    // Mostrar un título especial
+  } else if (filtroSubcategoriaActual === "Novedades") {
     mostrarTituloEspecial("novedad");
-    
-    // Scroll al título especial
-    setTimeout(() => {
-      const titulo = document.getElementById("titulo-especial");
-      if (titulo) titulo.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
-  } else if (cat === "Todos") {
-    // Mostrar todas las categorías
-    document.querySelectorAll(".categoria").forEach(sec=>{
-      sec.style.display = "";
-    });
-    
-    // Mostrar títulos de categoría
-    document.querySelectorAll(".category-title").forEach(title => {
-      title.style.display = "";
-    });
-    
-    document.querySelectorAll(".card").forEach(card => {
-      // Ocultar los agotados en la vista "Todos" para no sobrecargar
-      card.style.display = card.classList.contains("agotado") ? "none" : "";
-    });
-    
-    // Remover título especial si existe
-    const tituloEspecial = document.getElementById("titulo-especial");
-    if (tituloEspecial) tituloEspecial.remove();
-    
-    // Scroll a la primera categoría
-    const target = document.querySelector(".categoria");
-    if(target){
-      target.scrollIntoView({ behavior:"smooth", block:"start" });
-    }
-  } else {
-    // Filtro normal por categoría
-    document.querySelectorAll(".categoria").forEach(sec=>{
-      sec.style.display = sec.dataset.categoria === cat ? "" : "none";
-    });
-    
-    // Mostrar títulos de categoría
-    document.querySelectorAll(".category-title").forEach(title => {
-      title.style.display = "";
-    });
+  } else if (filtroSubcategoriaActual === "Proximamente") {
+    mostrarTituloEspecial("proximamente");
+  }
 
-    // Mostrar todos los productos (incluyendo agotados) en categorías específicas
-    document.querySelectorAll(".card").forEach(card => {
-      card.style.display = "";
-    });
+  document.querySelectorAll(".categoria").forEach(sec => {
+    const tieneVisibles = Array.from(sec.querySelectorAll(".card")).some(card => card.style.display !== "none");
+    sec.style.display = tieneVisibles ? "" : "none";
+  });
 
-    // Remover título especial si existe
-    const tituloEspecial = document.getElementById("titulo-especial");
-    if (tituloEspecial) tituloEspecial.remove();
+  const target = document.querySelector("#titulo-especial")
+    || document.querySelector(`.categoria[data-categoria="${categoriaBaseActual}"]`)
+    || document.querySelector(".categoria");
 
-    // Scroll suave a la categoría
-    const target = document.querySelector(`.categoria[data-categoria="${cat}"]`);
-    if(target){
-      target.scrollIntoView({ behavior:"smooth", block:"start" });
-    }
+  if (target) {
+    target.scrollIntoView({ behavior:"smooth", block:"start" });
   }
 }
 
@@ -856,6 +943,8 @@ function mostrarTituloEspecial(tipo) {
     titulo.textContent = "🎁 Promociones Especiales";
   } else if (tipo === "novedad") {
     titulo.textContent = "⚡ Novedades";
+  } else if (tipo === "proximamente") {
+    titulo.textContent = "🕒 Próximamente";
   }
   
   // Insertar después del nav o antes del primer grid
