@@ -8,16 +8,56 @@ const VENDEDORES = [
 ];
 
 const DEFAULT_CONFIG = {
-  modoRevendedor: false,
   vendedorFijo: null,
-  numeroFijo: null,
-  requerirClaveDiaria: false,
-  secretDiario: "HS507",
-  paramClave: "k"
+  numeroFijo: null
 };
+
+const PROFILE_CONFIG = {
+  christian: {
+    vendedorFijo: "Christian",
+    numeroFijo: "6977-8350"
+  },
+  yoli: {
+    vendedorFijo: "Yoli",
+    numeroFijo: "6168-3538"
+  },
+  angel: {
+    vendedorFijo: "Angel",
+    numeroFijo: "6260-6548"
+  },
+  mayerlis: {
+    vendedorFijo: "Mayerlis",
+    numeroFijo: "6236-4158"
+  },
+  genesis: {
+    vendedorFijo: "Génesis",
+    numeroFijo: "6171-3520"
+  }
+};
+
+function normalizarPerfil(valor) {
+  return (valor || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+function obtenerConfigURL() {
+  const params = new URLSearchParams(window.location.search);
+  const perfilRaw = params.get("perfil") || params.get("trabajador") || params.get("vendedor") || "";
+  const perfil = normalizarPerfil(perfilRaw);
+
+  if (!perfil) {
+    return {};
+  }
+
+  return PROFILE_CONFIG[perfil] || {};
+}
 
 const APP_CONFIG = {
   ...DEFAULT_CONFIG,
+  ...obtenerConfigURL(),
   ...(window.CATALOGO_CONFIG || {})
 };
 
@@ -29,6 +69,9 @@ let seleccion = JSON.parse(localStorage.getItem("seleccion")) || [];
 let productoActual = null; // <--- ESTA ES LA QUE FALTABA
 let tiempoRestante = 7;
 let intervaloTimer = null;
+let mostrarPrecioMayor = false;
+let temporizadorLogoMayor = null;
+const DURACION_ACTIVACION_MAYOR_MS = 6000;
 
 /* ================= FUNCIÓN GLOBAL: CERRAR MENÚ ================= */
 function cerrarMenu() {
@@ -44,11 +87,6 @@ function cerrarMenu() {
 
 /* ================= INICIALIZAR ================= */
 document.addEventListener("DOMContentLoaded", () => {
-  const accesoPermitido = validarAccesoPorClaveDiaria();
-  if (!accesoPermitido) {
-    return;
-  }
-
   aplicarConfiguracionUI();
   restaurarSeleccion();
   actualizarContador();
@@ -63,63 +101,18 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Iniciar alternancia de eslogan
   iniciarAlternanciaEslogan();
+  iniciarModoMayoristaDesdeLogo();
   
   // Aplicar filtrado de agotados al cargar la página
   filtrarCategoria("Todos", null);
   
   // Inicializar productos promocionales (mostrar precio)
   inicializarProductosPromocionales();
-
-  if (APP_CONFIG.modoRevendedor) {
-    evaluarPreciosRevendedor();
-  }
 });
 
-function obtenerClaveDiariaEsperada() {
-  const fecha = new Date();
-  const y = fecha.getFullYear();
-  const inicio = new Date(fecha.getFullYear(), 0, 0);
-  const diff = fecha - inicio;
-  const day = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const semilla = `${APP_CONFIG.secretDiario}-${y}-${day}`;
-
-  let hash = 0;
-  for (let i = 0; i < semilla.length; i++) {
-    hash = ((hash << 5) - hash) + semilla.charCodeAt(i);
-    hash |= 0;
-  }
-
-  const codigo = Math.abs(hash % 100000);
-  return String(codigo).padStart(5, "0");
-}
-
-function validarAccesoPorClaveDiaria() {
-  if (!APP_CONFIG.requerirClaveDiaria) return true;
-
-  const params = new URLSearchParams(window.location.search);
-  const claveRecibida = (params.get(APP_CONFIG.paramClave) || "").trim();
-  const claveEsperada = obtenerClaveDiariaEsperada();
-
-  if (/^\d{5}$/.test(claveRecibida) && claveRecibida === claveEsperada) {
-    return true;
-  }
-
-  document.body.innerHTML = `
-    <main style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#081a33;color:#ffffff;text-align:center;">
-      <section style="max-width:520px;background:#0c2b5e;border:2px solid #e0b75a;border-radius:16px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.35)">
-        <h1 style="margin:0 0 10px 0;color:#e0b75a;font-size:1.8rem;">Acceso restringido</h1>
-        <p style="margin:0;line-height:1.6;">Este enlace requiere una clave diaria de 5 dígitos válida. Solicita la URL actualizada del día.</p>
-      </section>
-    </main>
-  `;
-
-  return false;
-}
-
 function aplicarConfiguracionUI() {
-  if (!APP_CONFIG.modoRevendedor) return;
+  if (!APP_CONFIG.numeroFijo && !APP_CONFIG.vendedorFijo) return;
 
-  document.body.classList.add("modo-revendedor");
   const enlacesWhatsApp = document.querySelectorAll('a[href*="wa.me/"]');
   enlacesWhatsApp.forEach(link => {
     if (APP_CONFIG.numeroFijo) {
@@ -131,15 +124,74 @@ function aplicarConfiguracionUI() {
   });
 }
 
-function evaluarPreciosRevendedor() {
-  document.querySelectorAll(".card").forEach(card => {
-    const precio = (card.dataset.precio || "").trim();
-    if (!precio) {
-      card.classList.add("precio-faltante");
-    } else {
-      card.classList.remove("precio-faltante");
-    }
-  });
+function iniciarModoMayoristaDesdeLogo() {
+  const logo = document.querySelector(".header-brand .logo-img");
+  if (!logo) return;
+
+  logo.style.cursor = "pointer";
+
+  const iniciarPresion = (e) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    limpiarTemporizadorLogo();
+    temporizadorLogoMayor = setTimeout(() => {
+      alternarModoMayorista();
+      temporizadorLogoMayor = null;
+    }, DURACION_ACTIVACION_MAYOR_MS);
+  };
+
+  const cancelarPresion = () => {
+    limpiarTemporizadorLogo();
+  };
+
+  logo.addEventListener("pointerdown", iniciarPresion);
+  logo.addEventListener("pointerup", cancelarPresion);
+  logo.addEventListener("pointerleave", cancelarPresion);
+  logo.addEventListener("pointercancel", cancelarPresion);
+}
+
+function limpiarTemporizadorLogo() {
+  if (!temporizadorLogoMayor) return;
+  clearTimeout(temporizadorLogoMayor);
+  temporizadorLogoMayor = null;
+}
+
+function alternarModoMayorista() {
+  mostrarPrecioMayor = !mostrarPrecioMayor;
+  document.body.classList.toggle("modo-mayorista", mostrarPrecioMayor);
+
+  const logo = document.querySelector(".header-brand .logo-img");
+  if (logo) {
+    logo.classList.toggle("logo-mayorista-activo", mostrarPrecioMayor);
+  }
+
+  if (window.cardModalActual) {
+    actualizarPreciosModal(window.cardModalActual);
+  }
+}
+
+function actualizarPreciosModal(card) {
+  const precioElem = document.getElementById("modalPrecio");
+  const precioMayorElem = document.getElementById("modalPrecioMayor");
+  if (!precioElem || !precioMayorElem || !card) return;
+
+  const precioDetalle = (card.dataset.precio || card.dataset.price || "").trim();
+  const precioMayor = (card.dataset.precioMayor || card.dataset.precioMayoreo || "").trim();
+
+  if (mostrarPrecioMayor) {
+    precioElem.style.display = "none";
+    precioMayorElem.style.display = "block";
+    precioMayorElem.textContent = `Precio al mayor: ${precioMayor}`;
+    return;
+  }
+
+  precioMayorElem.style.display = "none";
+  if (precioDetalle) {
+    precioElem.style.display = "block";
+    precioElem.textContent = precioDetalle;
+  } else {
+    precioElem.style.display = "none";
+    precioElem.textContent = "";
+  }
 }
 
 /* ================= ALTERNANCIA DE ESLOGAN ================= */
@@ -402,6 +454,7 @@ function abrirModal(img){
   try {
     const card = img.closest(".card");
     if (!card) return;
+    window.cardModalActual = card;
     
     const nombre = card.dataset.nombre || "Producto";
     const descripcion = card.dataset.descripcion || "Producto de alta calidad.";
@@ -415,16 +468,7 @@ function abrirModal(img){
     document.getElementById("modalNombre").textContent = nombre;
     document.getElementById("modalDesc").textContent = descripcion;
     
-    // Mostrar precio si existe en el dataset (data-precio)
-    const precioElem = document.getElementById("modalPrecio");
-    const precio = card.dataset.precio || card.dataset.price || null;
-    if(precio){
-      precioElem.style.display = "block";
-      precioElem.textContent = precio;
-    } else {
-      precioElem.style.display = "none";
-      precioElem.textContent = "";
-    }
+    actualizarPreciosModal(card);
 
     // --- Carousel automático: leer imágenes y empezar interval ---
     // Limpiar interval previo si existe
@@ -504,6 +548,7 @@ function cerrarModal(){
   document.getElementById("modalImagen").classList.remove("activo");
   cerrarModalCollage();
   productoActual = null;
+  window.cardModalActual = null;
   // limpiar rotación automática si existe
   if(window.modalInterval){
     clearInterval(window.modalInterval);
@@ -520,23 +565,75 @@ document.addEventListener("click", (e) => {
 });
 
 /* ================= FUNCIONES MODAL VIDEO UBICACIÓN ================= */
+const VIDEOS_UBICACION = {
+  "5mayo": "videos/ubicacion.mp4",
+  "mcdonalds": "videos/ubicacion2.mp4"
+};
+
 function abrirModalVideo(){
   const modalVideo = document.getElementById("modalVideo");
+  const video = document.getElementById("videoUbicacion");
+  const source = document.getElementById("videoUbicacionSource");
   if(modalVideo){
     modalVideo.style.display = "flex";
     cerrarMenu(); // Cerrar menú hamburguesa si está abierto
+  }
+
+  if (video && source) {
+    source.src = "";
+    video.load();
+  }
+
+  actualizarBotonesRutaVideo(null);
+}
+
+function seleccionarVideoUbicacion(ruta) {
+  const src = VIDEOS_UBICACION[ruta];
+  const video = document.getElementById("videoUbicacion");
+  const source = document.getElementById("videoUbicacionSource");
+  if (!src || !video || !source) return;
+
+  source.src = src;
+  video.load();
+  actualizarBotonesRutaVideo(ruta);
+
+  const playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => {});
+  }
+}
+
+function actualizarBotonesRutaVideo(rutaActiva) {
+  const btnRuta5Mayo = document.getElementById("btnRuta5Mayo");
+  const btnRutaMcVendela = document.getElementById("btnRutaMcVendela");
+
+  if (btnRuta5Mayo) {
+    btnRuta5Mayo.classList.toggle("selected", rutaActiva === "5mayo");
+  }
+
+  if (btnRutaMcVendela) {
+    btnRutaMcVendela.classList.toggle("selected", rutaActiva === "mcdonalds");
   }
 }
 
 function cerrarModalVideo(){
   const modalVideo = document.getElementById("modalVideo");
   const video = document.getElementById("videoUbicacion");
+  const source = document.getElementById("videoUbicacionSource");
   if(modalVideo){
     modalVideo.style.display = "none";
   }
   if(video){
     video.pause();
+    video.currentTime = 0;
   }
+  if (source) {
+    source.src = "";
+  }
+  if (video) {
+    video.load();
+  }
+  actualizarBotonesRutaVideo(null);
 }
 
 // Cerrar modal de video al hacer clic fuera

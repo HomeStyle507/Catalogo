@@ -123,6 +123,12 @@ body{
   height: clamp(80px, 15vw, 120px);
   object-fit: contain;
   flex-shrink: 0;
+  transition: transform 0.6s ease;
+  transform-style: preserve-3d;
+}
+
+.logo-img.logo-mayorista-activo {
+  transform: rotateY(180deg);
 }
 
 .brand-text .header-tagline {
@@ -698,10 +704,6 @@ nav button.btn-subcat.btn-subcat-prox:hover{
   font-weight:800;
 }
 
-body.modo-revendedor .card.precio-faltante img{
-  filter: grayscale(15%) saturate(0.8) brightness(0.7) sepia(0.7) hue-rotate(-25deg) saturate(3.5);
-}
-
 .card-info h3{
   font-size: clamp(0.9rem, 3.125vw, 1.25rem);
   font-weight:700;
@@ -891,6 +893,10 @@ body.modo-revendedor .card.precio-faltante img{
   font-weight:800;
   font-size: clamp(1.2rem, 3.75vw, 1.562rem);
   margin-bottom: clamp(12.5px, 2.5vw, 20px);
+}
+
+.modal-precio-mayor{
+  color: var(--primary);
 }
 
 .modal-btn{

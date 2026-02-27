@@ -159,3 +159,17 @@ Localiza el `<article class="card"...` del producto
 ---
 
 **¡Listo!** Ahora el menú hamburguesa mostrará automáticamente los productos destacados cuando hagas clic en "Novedades" o "Promociones". 🎉
+
+---
+
+## 🔗 Enlaces de Perfiles (Compartir)
+
+Usa estos enlaces desde el `index.html` principal:
+
+- Angel: `index.html?perfil=angel`
+- Christian: `index.html?perfil=christian`
+- Génesis: `index.html?perfil=genesis`
+- Mayerlis: `index.html?perfil=mayerlis`
+- Yoli: `index.html?perfil=yoli`
+
+> Nota: Las carpetas por nombre de trabajador ya no son necesarias.
