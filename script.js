@@ -70,8 +70,9 @@ let productoActual = null; // <--- ESTA ES LA QUE FALTABA
 let tiempoRestante = 7;
 let intervaloTimer = null;
 let mostrarPrecioMayor = false;
-let temporizadorLogoMayor = null;
-const DURACION_ACTIVACION_MAYOR_MS = 6000;
+let toquesLogoMayor = [];
+const CLICKS_ACTIVACION_MAYOR = 7;
+const VENTANA_ACTIVACION_MAYOR_MS = 5000;
 
 /* ================= FUNCIÓN GLOBAL: CERRAR MENÚ ================= */
 function cerrarMenu() {
@@ -130,29 +131,21 @@ function iniciarModoMayoristaDesdeLogo() {
 
   logo.style.cursor = "pointer";
 
-  const iniciarPresion = (e) => {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
-    limpiarTemporizadorLogo();
-    temporizadorLogoMayor = setTimeout(() => {
-      alternarModoMayorista();
-      temporizadorLogoMayor = null;
-    }, DURACION_ACTIVACION_MAYOR_MS);
-  };
-
-  const cancelarPresion = () => {
-    limpiarTemporizadorLogo();
-  };
-
-  logo.addEventListener("pointerdown", iniciarPresion);
-  logo.addEventListener("pointerup", cancelarPresion);
-  logo.addEventListener("pointerleave", cancelarPresion);
-  logo.addEventListener("pointercancel", cancelarPresion);
+  logo.addEventListener("click", (e) => {
+    if (typeof e.button === "number" && e.button !== 0) return;
+    registrarToqueLogoMayor();
+  });
 }
 
-function limpiarTemporizadorLogo() {
-  if (!temporizadorLogoMayor) return;
-  clearTimeout(temporizadorLogoMayor);
-  temporizadorLogoMayor = null;
+function registrarToqueLogoMayor() {
+  const ahora = Date.now();
+  toquesLogoMayor.push(ahora);
+  toquesLogoMayor = toquesLogoMayor.filter(ts => (ahora - ts) <= VENTANA_ACTIVACION_MAYOR_MS);
+
+  if (toquesLogoMayor.length >= CLICKS_ACTIVACION_MAYOR) {
+    toquesLogoMayor = [];
+    alternarModoMayorista();
+  }
 }
 
 function alternarModoMayorista() {
