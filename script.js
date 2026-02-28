@@ -76,8 +76,6 @@ let imagenesDescarga = [];
 const seleccionImagenesDescarga = new Set();
 const PLACEHOLDER_BUSCADOR_NORMAL = "Buscar productos...";
 const PLACEHOLDER_BUSCADOR_DESCARGA = "Buscar imágenes...";
-const CATALOGO_ADMIN_KEY = "catalogoAdminDataV1";
-const CATALOGO_SNAPSHOT_KEY = "catalogoSnapshotDataV1";
 const CLICKS_ACTIVACION_MAYOR = 7;
 const VENTANA_ACTIVACION_MAYOR_MS = 5000;
 
@@ -96,7 +94,6 @@ function cerrarMenu() {
 /* ================= INICIALIZAR ================= */
 document.addEventListener("DOMContentLoaded", () => {
   aplicarConfiguracionUI();
-  aplicarEdicionCatalogoAdministrado();
   restaurarSeleccion();
   actualizarContador();
   actualizarBotonWA();
@@ -117,149 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Inicializar productos promocionales (mostrar precio)
   inicializarProductosPromocionales();
-
-  guardarSnapshotCatalogo();
 });
-
-function leerCatalogoAdminData() {
-  try {
-    const raw = localStorage.getItem(CATALOGO_ADMIN_KEY);
-    const parsed = raw ? JSON.parse(raw) : null;
-    if (!parsed || !Array.isArray(parsed.productos)) return null;
-    return parsed;
-  } catch {
-    return null;
-  }
-}
-
-function escapeHtml(valor) {
-  return String(valor || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function construirCardDesdeAdmin(producto) {
-  const nombre = (producto.nombre || "Producto").trim();
-  const titulo = (producto.titulo || nombre).trim();
-  const descripcion = (producto.descripcion || "").trim();
-  const precio = (producto.precio || "").trim();
-  const precioMayor = (producto.precioMayor || "").trim();
-  const estado = (producto.estado || "normal").toLowerCase();
-  const esPromo = Boolean(producto.promo);
-  const esNuevo = Boolean(producto.new);
-  const imagenes = Array.isArray(producto.imagenes)
-    ? producto.imagenes.map(v => String(v || "").trim()).filter(Boolean)
-    : [];
-
-  if (!nombre || !imagenes.length) return null;
-
-  const clases = ["card"];
-  if (estado === "proximo") clases.push("proximo");
-  if (estado === "agotado") clases.push("agotado");
-  if (esPromo) clases.push("promo");
-  if (esNuevo) clases.push("new");
-
-  const article = document.createElement("article");
-  article.className = clases.join(" ");
-  article.dataset.nombre = nombre;
-  article.dataset.descripcion = descripcion;
-  article.dataset.precio = precio;
-  article.dataset.images = imagenes.join(",");
-  article.dataset.adminId = String(producto.id || "");
-
-  if (precioMayor) {
-    article.dataset.precioMayor = precioMayor;
-  }
-
-  const nombreSeguro = escapeHtml(nombre);
-  const tituloSeguro = escapeHtml(titulo);
-  article.innerHTML = `
-    <img src="${escapeHtml(imagenes[0])}" alt="${nombreSeguro}" loading="lazy">
-    <div class="card-info">
-      <h3>${tituloSeguro}</h3>
-      <button onclick="toggleProducto(this)">Consultar</button>
-    </div>
-  `;
-
-  return article;
-}
-
-function aplicarEdicionCatalogoAdministrado() {
-  const data = leerCatalogoAdminData();
-  if (!data || !Array.isArray(data.productos)) return;
-
-  document.querySelectorAll(".categoria .grid").forEach(grid => {
-    grid.innerHTML = "";
-  });
-
-  data.productos.forEach(producto => {
-    const categoria = (producto.categoria || "").trim();
-    if (!categoria) return;
-
-    const grid = document.querySelector(`.categoria[data-categoria="${categoria}"] .grid`);
-    if (!grid) return;
-
-    const card = construirCardDesdeAdmin(producto);
-    if (!card) return;
-
-    grid.appendChild(card);
-  });
-}
-
-function extraerProductoDeCard(card, categoria, idx) {
-  const nombre = (card.dataset.nombre || "Producto").trim();
-  const titulo = (card.querySelector(".card-info h3")?.textContent || nombre).trim();
-  const descripcion = (card.dataset.descripcion || "").trim();
-  const precio = (card.dataset.precio || "").trim();
-  const precioMayor = (card.dataset.precioMayor || "").trim();
-  const estado = card.classList.contains("agotado") ? "agotado" : (card.classList.contains("proximo") || card.classList.contains("proxima")) ? "proximo" : "normal";
-  const imagenes = (card.dataset.images || "")
-    .split(",")
-    .map(v => v.trim())
-    .filter(Boolean);
-
-  return {
-    id: card.dataset.adminId || `${categoria}-${idx + 1}-${Date.now()}`,
-    categoria,
-    estado,
-    nombre,
-    titulo,
-    descripcion,
-    precio,
-    precioMayor,
-    promo: card.classList.contains("promo"),
-    new: card.classList.contains("new"),
-    imagenes
-  };
-}
-
-function guardarSnapshotCatalogo() {
-  const productos = [];
-
-  document.querySelectorAll(".categoria").forEach(sec => {
-    const categoria = sec.dataset.categoria || "";
-    if (!categoria) return;
-
-    const cards = sec.querySelectorAll(".grid .card");
-    cards.forEach((card, idx) => {
-      const producto = extraerProductoDeCard(card, categoria, idx);
-      if (producto.imagenes.length) {
-        productos.push(producto);
-      }
-    });
-  });
-
-  const payload = {
-    version: 1,
-    generadoEn: new Date().toISOString(),
-    productos
-  };
-
-  localStorage.setItem(CATALOGO_SNAPSHOT_KEY, JSON.stringify(payload));
-}
 
 function aplicarConfiguracionUI() {
   if (!APP_CONFIG.numeroFijo && !APP_CONFIG.vendedorFijo) return;
