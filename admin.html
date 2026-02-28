@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de edición | Home Style 507</title>
+  <style>
+    :root{--primary:#081a33;--accent:#e0b75a;--bg:#f2f5f7;--ok:#16a34a;--danger:#dc2626}
+    *{box-sizing:border-box;font-family:Segoe UI,Inter,system-ui,sans-serif}
+    body{margin:0;background:var(--bg);color:#0f172a}
+    .auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .auth-box{width:min(460px,100%);background:#fff;border-radius:14px;padding:18px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+    .auth-box h1{margin:0 0 8px;color:var(--primary);font-size:1.3rem}
+    .auth-box p{margin:0 0 12px;color:#475569}
+    .auth-box input,.auth-box button{width:100%;padding:10px;border-radius:10px;border:1px solid #cbd5e1}
+    .auth-box button{margin-top:8px;background:var(--primary);color:#fff;border:none;font-weight:700;cursor:pointer}
+    .auth-err{margin-top:8px;color:#991b1b;font-weight:700;min-height:1.2em;font-size:.9rem}
+
+    #app{display:none}
+    .wrap{max-width:1180px;margin:0 auto;padding:20px}
+    .top{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:14px}
+    h2{margin:0;font-size:1.45rem;color:var(--primary)}
+    .hint{margin:0;color:#334155}
+    .panel{background:#fff;border-radius:14px;padding:14px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .full{grid-column:1/-1}
+    label{font-size:.9rem;font-weight:700;color:#334155;display:block;margin-bottom:5px}
+    input,select,textarea,button{width:100%;border-radius:10px;border:1px solid #cbd5e1;padding:10px;font-size:.95rem}
+    textarea{min-height:90px;resize:vertical}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .row > *{flex:1 1 180px}
+    .btn{background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:700}
+    .btn:hover{filter:brightness(1.08)}
+    .btn-sec{background:#334155;color:#fff;border:none;cursor:pointer;font-weight:700}
+    .btn-danger{background:var(--danger);color:#fff;border:none;cursor:pointer;font-weight:700}
+    .btn-ok{background:var(--ok);color:#fff;border:none;cursor:pointer;font-weight:700}
+    .list{margin-top:14px}
+    table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
+    th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.9rem;vertical-align:top}
+    th{background:#f8fafc;color:#334155}
+    .mini{display:flex;gap:5px;flex-wrap:wrap}
+    .mini img{width:38px;height:38px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0}
+    .status{font-size:.78rem;padding:4px 8px;border-radius:999px;background:#e2e8f0;display:inline-block}
+    .status.normal{background:#dcfce7;color:#166534}
+    .status.proximo{background:#fef9c3;color:#92400e}
+    .status.agotado{background:#fee2e2;color:#991b1b}
+    .top a{color:var(--primary);font-weight:700;text-decoration:none}
+    .msg{margin-top:8px;font-size:.9rem;font-weight:700;color:#166534;min-height:1.2em}
+    @media (max-width:800px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <section id="auth" class="auth">
+    <div class="auth-box">
+      <h1>Acceso al panel</h1>
+      <p>Ingresa la contraseña para editar todo el catálogo.</p>
+      <input id="passwordInput" type="password" placeholder="Contraseña">
+      <button id="loginBtn" type="button">Entrar</button>
+      <p id="authError" class="auth-err"></p>
+      <a href="index.html" style="display:inline-block;margin-top:8px;color:#334155">← Volver al catálogo</a>
+    </div>
+  </section>
+
+  <div id="app">
+    <div class="wrap">
+      <div class="top">
+        <div>
+          <h2>Panel de edición completa</h2>
+          <p class="hint">Edita productos existentes, agrega nuevos y elimina cualquier producto del catálogo.</p>
+        </div>
+        <a href="index.html">← Volver al catálogo</a>
+      </div>
+
+      <div class="panel">
+        <form id="productoForm" class="grid">
+          <input type="hidden" id="productoId">
+
+          <div>
+            <label for="categoria">Categoría</label>
+            <select id="categoria" required>
+              <option value="Forros">Forros</option><option value="Comedor">Comedor</option><option value="Sábanas">Sábanas</option>
+              <option value="Alfombras">Alfombras</option><option value="Electrónicos">Electrónicos</option><option value="Almohadas">Almohadas</option>
+              <option value="Fragancias">Fragancias</option><option value="Frazadas">Frazadas</option><option value="Toallas">Toallas</option>
+              <option value="Mochilas">Mochilas</option><option value="Carteras">Carteras</option><option value="Baño">Baño</option>
+              <option value="Cortinas">Cortinas</option><option value="Accesorios">Accesorios</option><option value="Otros">Otros</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="estado">Estado</label>
+            <select id="estado">
+              <option value="normal">Normal</option>
+              <option value="proximo">Próximamente</option>
+              <option value="agotado">Agotado</option>
+            </select>
+          </div>
+
+          <div class="full">
+            <label for="nombre">Nombre interno (modal y búsqueda)</label>
+            <input id="nombre" required placeholder="Ej: Cobertor para Lavadoras">
+          </div>
+
+          <div class="full">
+            <label for="titulo">Título visible en card</label>
+            <input id="titulo" required placeholder="Ej: Cobertor Lavadoras">
+          </div>
+
+          <div class="full">
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion"></textarea>
+          </div>
+
+          <div>
+            <label for="precio">Precio</label>
+            <input id="precio" placeholder="Ej: $8.56 o Desde $2.14 hasta $5.35">
+          </div>
+
+          <div>
+            <label for="precioMayor">Precio al mayor (opcional)</label>
+            <input id="precioMayor" placeholder="Ej: $6.50">
+          </div>
+
+          <div class="full">
+            <label for="imagenesUrls">Imágenes por ruta/URL (coma o línea)</label>
+            <textarea id="imagenesUrls" placeholder="img/categoria/01/1.jpeg, img/categoria/01/2.jpeg"></textarea>
+          </div>
+
+          <div class="full">
+            <label for="imagenesFiles">o subir imágenes (se guardan en este navegador)</label>
+            <input id="imagenesFiles" type="file" multiple accept="image/*">
+          </div>
+
+          <div class="row full">
+            <button class="btn" type="submit">Guardar cambios</button>
+            <button class="btn-sec" type="button" id="nuevoProducto">Nuevo producto</button>
+            <button class="btn-danger" type="button" id="limpiarTodo">Restaurar catálogo base</button>
+            <button class="btn-ok" type="button" id="exportar">Exportar respaldo (.json)</button>
+          </div>
+          <p id="mensaje" class="msg"></p>
+        </form>
+      </div>
+
+      <div class="panel list">
+        <h2 style="margin-top:0;color:#081a33;font-size:1.2rem">Todos los productos editables</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th><th>Categoría</th><th>Estado</th><th>Precio</th><th>Imágenes</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaProductos"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -570,6 +570,125 @@ nav button.btn-subcat.btn-subcat-prox:hover{
   padding: clamp(10px, 2.5vw, 16px);
 }
 
+.seccion-descarga-imagenes{
+  padding-bottom: 120px;
+}
+
+.descarga-imagenes-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+
+.descarga-imagen-item{
+  border: 2px solid #d7dde5;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.descarga-imagen-item img{
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.descarga-imagen-nombre{
+  display: block;
+  width: 100%;
+  background: #fff;
+  color: #0f172a;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.25;
+  padding: 8px 6px;
+  text-align: center;
+  border-top: 1px solid #e2e8f0;
+  min-height: 46px;
+}
+
+.descarga-imagen-item:hover{
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.descarga-imagen-item.selected{
+  border-color: #16a34a;
+  box-shadow: 0 0 0 1px #16a34a;
+}
+
+.descarga-imagen-check{
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(8, 26, 51, 0.88);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.descarga-imagen-item.selected .descarga-imagen-check{
+  display: inline-flex;
+}
+
+.descarga-imagenes-acciones{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px 18px;
+}
+
+.descarga-imagenes-btn{
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 1200;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 12px 20px;
+  cursor: pointer;
+  min-width: 240px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.descarga-imagenes-btn:hover{
+  background: #0c2b5e;
+}
+
+.descarga-imagenes-estado{
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.descarga-imagenes-vacio{
+  grid-column: 1 / -1;
+  background: #fff;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  color: #475569;
+  font-weight: 600;
+}
+
 /* 🖥 ESCRITORIO: 5 columnas */
 @media (min-width: 1024px){
   .grid{

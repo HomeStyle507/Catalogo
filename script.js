@@ -71,6 +71,13 @@ let tiempoRestante = 7;
 let intervaloTimer = null;
 let mostrarPrecioMayor = false;
 let toquesLogoMayor = [];
+let modoDescargaImagenes = false;
+let imagenesDescarga = [];
+const seleccionImagenesDescarga = new Set();
+const PLACEHOLDER_BUSCADOR_NORMAL = "Buscar productos...";
+const PLACEHOLDER_BUSCADOR_DESCARGA = "Buscar imágenes...";
+const CATALOGO_ADMIN_KEY = "catalogoAdminDataV1";
+const CATALOGO_SNAPSHOT_KEY = "catalogoSnapshotDataV1";
 const CLICKS_ACTIVACION_MAYOR = 7;
 const VENTANA_ACTIVACION_MAYOR_MS = 5000;
 
@@ -89,6 +96,7 @@ function cerrarMenu() {
 /* ================= INICIALIZAR ================= */
 document.addEventListener("DOMContentLoaded", () => {
   aplicarConfiguracionUI();
+  aplicarEdicionCatalogoAdministrado();
   restaurarSeleccion();
   actualizarContador();
   actualizarBotonWA();
@@ -109,7 +117,149 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Inicializar productos promocionales (mostrar precio)
   inicializarProductosPromocionales();
+
+  guardarSnapshotCatalogo();
 });
+
+function leerCatalogoAdminData() {
+  try {
+    const raw = localStorage.getItem(CATALOGO_ADMIN_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (!parsed || !Array.isArray(parsed.productos)) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function escapeHtml(valor) {
+  return String(valor || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function construirCardDesdeAdmin(producto) {
+  const nombre = (producto.nombre || "Producto").trim();
+  const titulo = (producto.titulo || nombre).trim();
+  const descripcion = (producto.descripcion || "").trim();
+  const precio = (producto.precio || "").trim();
+  const precioMayor = (producto.precioMayor || "").trim();
+  const estado = (producto.estado || "normal").toLowerCase();
+  const esPromo = Boolean(producto.promo);
+  const esNuevo = Boolean(producto.new);
+  const imagenes = Array.isArray(producto.imagenes)
+    ? producto.imagenes.map(v => String(v || "").trim()).filter(Boolean)
+    : [];
+
+  if (!nombre || !imagenes.length) return null;
+
+  const clases = ["card"];
+  if (estado === "proximo") clases.push("proximo");
+  if (estado === "agotado") clases.push("agotado");
+  if (esPromo) clases.push("promo");
+  if (esNuevo) clases.push("new");
+
+  const article = document.createElement("article");
+  article.className = clases.join(" ");
+  article.dataset.nombre = nombre;
+  article.dataset.descripcion = descripcion;
+  article.dataset.precio = precio;
+  article.dataset.images = imagenes.join(",");
+  article.dataset.adminId = String(producto.id || "");
+
+  if (precioMayor) {
+    article.dataset.precioMayor = precioMayor;
+  }
+
+  const nombreSeguro = escapeHtml(nombre);
+  const tituloSeguro = escapeHtml(titulo);
+  article.innerHTML = `
+    <img src="${escapeHtml(imagenes[0])}" alt="${nombreSeguro}" loading="lazy">
+    <div class="card-info">
+      <h3>${tituloSeguro}</h3>
+      <button onclick="toggleProducto(this)">Consultar</button>
+    </div>
+  `;
+
+  return article;
+}
+
+function aplicarEdicionCatalogoAdministrado() {
+  const data = leerCatalogoAdminData();
+  if (!data || !Array.isArray(data.productos)) return;
+
+  document.querySelectorAll(".categoria .grid").forEach(grid => {
+    grid.innerHTML = "";
+  });
+
+  data.productos.forEach(producto => {
+    const categoria = (producto.categoria || "").trim();
+    if (!categoria) return;
+
+    const grid = document.querySelector(`.categoria[data-categoria="${categoria}"] .grid`);
+    if (!grid) return;
+
+    const card = construirCardDesdeAdmin(producto);
+    if (!card) return;
+
+    grid.appendChild(card);
+  });
+}
+
+function extraerProductoDeCard(card, categoria, idx) {
+  const nombre = (card.dataset.nombre || "Producto").trim();
+  const titulo = (card.querySelector(".card-info h3")?.textContent || nombre).trim();
+  const descripcion = (card.dataset.descripcion || "").trim();
+  const precio = (card.dataset.precio || "").trim();
+  const precioMayor = (card.dataset.precioMayor || "").trim();
+  const estado = card.classList.contains("agotado") ? "agotado" : (card.classList.contains("proximo") || card.classList.contains("proxima")) ? "proximo" : "normal";
+  const imagenes = (card.dataset.images || "")
+    .split(",")
+    .map(v => v.trim())
+    .filter(Boolean);
+
+  return {
+    id: card.dataset.adminId || `${categoria}-${idx + 1}-${Date.now()}`,
+    categoria,
+    estado,
+    nombre,
+    titulo,
+    descripcion,
+    precio,
+    precioMayor,
+    promo: card.classList.contains("promo"),
+    new: card.classList.contains("new"),
+    imagenes
+  };
+}
+
+function guardarSnapshotCatalogo() {
+  const productos = [];
+
+  document.querySelectorAll(".categoria").forEach(sec => {
+    const categoria = sec.dataset.categoria || "";
+    if (!categoria) return;
+
+    const cards = sec.querySelectorAll(".grid .card");
+    cards.forEach((card, idx) => {
+      const producto = extraerProductoDeCard(card, categoria, idx);
+      if (producto.imagenes.length) {
+        productos.push(producto);
+      }
+    });
+  });
+
+  const payload = {
+    version: 1,
+    generadoEn: new Date().toISOString(),
+    productos
+  };
+
+  localStorage.setItem(CATALOGO_SNAPSHOT_KEY, JSON.stringify(payload));
+}
 
 function aplicarConfiguracionUI() {
   if (!APP_CONFIG.numeroFijo && !APP_CONFIG.vendedorFijo) return;
@@ -315,6 +465,20 @@ function configurarEventListeners() {
       abrirModalVideo();
     });
   }
+
+  const openImageDownloadSectionBtn = document.getElementById("openImageDownloadSection");
+  if (openImageDownloadSectionBtn) {
+    openImageDownloadSectionBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      activarModoDescargaImagenes();
+      cerrarMenu();
+    });
+  }
+
+  const descargarImagenesBtn = document.getElementById("descargarImagenesSeleccionadas");
+  if (descargarImagenesBtn) {
+    descargarImagenesBtn.addEventListener("click", descargarImagenesSeleccionadas);
+  }
   
   // Menú hamburguesa
   const menuToggle = document.getElementById("menuToggle");
@@ -355,6 +519,10 @@ function configurarEventListeners() {
       const category = e.currentTarget.dataset.category;
       if (category) {
         e.preventDefault();
+
+        if (modoDescargaImagenes) {
+          desactivarModoDescargaImagenes();
+        }
         
         // Actualizar estado activo
         document.querySelectorAll(".menu-link").forEach(l => l.classList.remove("active"));
@@ -926,7 +1094,230 @@ function coincideFuzzy(texto, consulta, tolerancia = 2) {
   return true;
 }
 
+function normalizarTextoBusqueda(valor) {
+  return (valor || "")
+    .toString()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+function recolectarImagenesParaDescarga() {
+  const listaImagenes = [];
+  let contadorImagen = 0;
+
+  document.querySelectorAll(".categoria").forEach(sec => {
+    const categoria = sec.dataset.categoria || "Todos";
+
+    sec.querySelectorAll(".card").forEach(card => {
+      const nombreProducto = card.dataset.nombre || "Producto";
+      const lista = (card.dataset.images || "")
+        .split(",")
+        .map(img => img.trim())
+        .filter(Boolean);
+
+      if (!lista.length) {
+        const imgCard = card.querySelector("img");
+        if (imgCard?.getAttribute("src")) {
+          lista.push(imgCard.getAttribute("src").trim());
+        }
+      }
+
+      lista.forEach(ruta => {
+        if (!ruta || ruta.includes("img/categoria/00/0.jpeg")) return;
+
+        contadorImagen += 1;
+        listaImagenes.push({
+          id: `img-descarga-${contadorImagen}`,
+          src: ruta,
+          categoria,
+          nombre: nombreProducto
+        });
+      });
+    });
+  });
+
+  imagenesDescarga = listaImagenes;
+}
+
+function actualizarEstadoDescargaImagenes() {
+  const estado = document.getElementById("descargaImagenesEstado");
+  if (!estado) return;
+
+  const cantidad = seleccionImagenesDescarga.size;
+  estado.textContent = `${cantidad} imágenes seleccionadas`;
+}
+
+function crearNombreDescarga(src, index) {
+  const limpio = (src || "").split("?")[0];
+  const partes = limpio.split("/");
+  const archivo = partes[partes.length - 1] || `imagen-${index + 1}.jpeg`;
+  const carpeta = partes.length >= 2 ? partes[partes.length - 2] : "catalogo";
+  return `${carpeta}-${archivo}`;
+}
+
+function renderizarGaleriaDescarga() {
+  if (!modoDescargaImagenes) return;
+
+  const grid = document.getElementById("descargaImagenesGrid");
+  if (!grid) return;
+
+  const q = normalizarTextoBusqueda(document.getElementById("search")?.value || "");
+  const categoriaObjetivo = categoriaBaseActual || "Todos";
+
+  const lista = imagenesDescarga.filter(item => {
+    if (categoriaObjetivo !== "Todos" && item.categoria !== categoriaObjetivo) {
+      return false;
+    }
+
+    if (!q) return true;
+
+    const texto = normalizarTextoBusqueda(`${item.nombre} ${item.categoria} ${item.src}`);
+    return coincideFuzzy(texto, q);
+  });
+
+  grid.innerHTML = "";
+
+  if (!lista.length) {
+    const vacio = document.createElement("p");
+    vacio.className = "descarga-imagenes-vacio";
+    vacio.textContent = "No hay imágenes para mostrar con esos filtros.";
+    grid.appendChild(vacio);
+    actualizarEstadoDescargaImagenes();
+    return;
+  }
+
+  lista.forEach(item => {
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.className = "descarga-imagen-item";
+    boton.setAttribute("aria-label", `Seleccionar imagen de ${item.nombre}`);
+
+    if (seleccionImagenesDescarga.has(item.id)) {
+      boton.classList.add("selected");
+    }
+
+    const imagen = document.createElement("img");
+    imagen.src = item.src;
+    imagen.alt = "Imagen de producto";
+    imagen.loading = "lazy";
+
+    const marca = document.createElement("span");
+    marca.className = "descarga-imagen-check";
+    marca.textContent = "✓";
+
+    const nombre = document.createElement("span");
+    nombre.className = "descarga-imagen-nombre";
+    nombre.textContent = item.nombre;
+
+    boton.appendChild(imagen);
+    boton.appendChild(marca);
+    boton.appendChild(nombre);
+
+    boton.addEventListener("click", () => {
+      if (seleccionImagenesDescarga.has(item.id)) {
+        seleccionImagenesDescarga.delete(item.id);
+        boton.classList.remove("selected");
+      } else {
+        seleccionImagenesDescarga.add(item.id);
+        boton.classList.add("selected");
+      }
+      actualizarEstadoDescargaImagenes();
+    });
+
+    grid.appendChild(boton);
+  });
+
+  actualizarEstadoDescargaImagenes();
+}
+
+function activarModoDescargaImagenes() {
+  if (!imagenesDescarga.length) {
+    recolectarImagenesParaDescarga();
+  }
+
+  modoDescargaImagenes = true;
+  categoriaBaseActual = "Todos";
+  filtroSubcategoriaActual = null;
+
+  const seccionDescarga = document.getElementById("seccionDescargaImagenes");
+  const buscador = document.getElementById("search");
+  const botonMenuDescarga = document.getElementById("openImageDownloadSection");
+  const botonFlotante = document.querySelector(".float-wa");
+
+  document.querySelectorAll("#catalogo .categoria").forEach(sec => {
+    sec.style.display = "none";
+  });
+  if (seccionDescarga) seccionDescarga.style.display = "";
+  if (botonFlotante) botonFlotante.style.display = "none";
+
+  if (buscador) {
+    buscador.value = "";
+    buscador.placeholder = PLACEHOLDER_BUSCADOR_DESCARGA;
+  }
+
+  document.querySelectorAll("nav button").forEach(btn => {
+    const esTodos = btn.dataset.category === "Todos";
+    btn.classList.toggle("active", esTodos);
+    btn.setAttribute("aria-pressed", esTodos ? "true" : "false");
+  });
+
+  document.querySelectorAll(".menu-link").forEach(link => link.classList.remove("active"));
+  if (botonMenuDescarga) botonMenuDescarga.classList.add("active");
+
+  renderizarGaleriaDescarga();
+}
+
+function desactivarModoDescargaImagenes() {
+  if (!modoDescargaImagenes) return;
+
+  modoDescargaImagenes = false;
+  const seccionDescarga = document.getElementById("seccionDescargaImagenes");
+  const buscador = document.getElementById("search");
+  const botonFlotante = document.querySelector(".float-wa");
+  const botonMenuDescarga = document.getElementById("openImageDownloadSection");
+
+  document.querySelectorAll("#catalogo .categoria").forEach(sec => {
+    sec.style.display = "";
+  });
+  if (seccionDescarga) seccionDescarga.style.display = "none";
+  if (botonFlotante) botonFlotante.style.display = "";
+  if (botonMenuDescarga) botonMenuDescarga.classList.remove("active");
+
+  if (buscador) {
+    buscador.value = "";
+    buscador.placeholder = PLACEHOLDER_BUSCADOR_NORMAL;
+  }
+}
+
+function descargarImagenesSeleccionadas() {
+  if (!seleccionImagenesDescarga.size) {
+    alert("Selecciona al menos una imagen para descargar.");
+    return;
+  }
+
+  const seleccionadas = imagenesDescarga.filter(item => seleccionImagenesDescarga.has(item.id));
+
+  seleccionadas.forEach((item, index) => {
+    const enlace = document.createElement("a");
+    enlace.href = item.src;
+    enlace.download = crearNombreDescarga(item.src, index);
+    document.body.appendChild(enlace);
+
+    setTimeout(() => {
+      enlace.click();
+      enlace.remove();
+    }, index * 120);
+  });
+}
+
 function filtrar(){
+  if (modoDescargaImagenes) {
+    renderizarGaleriaDescarga();
+    return;
+  }
+
   const q = (document.getElementById("search").value || "").toLowerCase().trim();
 
   // Filtrar cards por nombre
@@ -961,6 +1352,29 @@ function filtrarCategoria(cat, btn){
     "Proximamente": card => card.classList.contains("proximo") || card.classList.contains("proxima"),
     "Agotados": card => card.classList.contains("agotado")
   };
+
+  if (modoDescargaImagenes) {
+    if (!categoriasBase.has(cat)) return;
+
+    categoriaBaseActual = cat;
+
+    document.querySelectorAll("nav button").forEach(b=>{
+      b.classList.remove("active");
+      b.setAttribute("aria-pressed", "false");
+    });
+
+    if (btn) {
+      btn.classList.add("active");
+      btn.setAttribute("aria-pressed", "true");
+    }
+
+    renderizarGaleriaDescarga();
+    const seccion = document.getElementById("seccionDescargaImagenes");
+    if (seccion) {
+      seccion.scrollIntoView({ behavior:"smooth", block:"start" });
+    }
+    return;
+  }
 
   if (categoriasBase.has(cat)) {
     categoriaBaseActual = cat;
