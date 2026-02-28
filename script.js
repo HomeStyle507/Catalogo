@@ -460,6 +460,7 @@ function abrirModal(img){
     // Usar textContent en lugar de innerHTML para seguridad
     document.getElementById("modalNombre").textContent = nombre;
     document.getElementById("modalDesc").textContent = descripcion;
+    actualizarEtiquetaFraganciaModal(nombre);
     
     actualizarPreciosModal(card);
 
@@ -536,10 +537,42 @@ function abrirModal(img){
   }
 }
 
+function actualizarEtiquetaFraganciaModal(nombreProducto) {
+  const etiqueta = document.getElementById("modalEtiquetaFragancia");
+  const etiquetaSecundaria = document.getElementById("modalEtiquetaFraganciaSecundaria");
+  if (!etiqueta || !etiquetaSecundaria) return;
+
+  const nombre = (nombreProducto || "").toLowerCase();
+  etiqueta.classList.remove("activa", "pos-left", "pos-right");
+  etiqueta.textContent = "";
+  etiquetaSecundaria.classList.remove("activa", "pos-left", "pos-right");
+  etiquetaSecundaria.textContent = "";
+
+  if (nombre.includes("combo irresistible")) {
+    etiqueta.textContent = "Crema";
+    etiqueta.classList.add("activa", "pos-left");
+    etiquetaSecundaria.textContent = "Splash";
+    etiquetaSecundaria.classList.add("activa", "pos-right");
+    return;
+  }
+
+  if (nombre.includes("splash victoria's secret")) {
+    etiqueta.textContent = "Splash";
+    etiqueta.classList.add("activa", "pos-right");
+    return;
+  }
+
+  if (nombre.includes("cremas victoria's secret")) {
+    etiqueta.textContent = "Crema";
+    etiqueta.classList.add("activa", "pos-left");
+  }
+}
+
 /* ================= CERRAR MODAL ================= */
 function cerrarModal(){
   document.getElementById("modalImagen").classList.remove("activo");
   cerrarModalCollage();
+  actualizarEtiquetaFraganciaModal("");
   productoActual = null;
   window.cardModalActual = null;
   // limpiar rotación automática si existe

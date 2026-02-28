@@ -778,6 +778,40 @@ nav button.btn-subcat.btn-subcat-prox:hover{
   cursor: zoom-in;
 }
 
+.modal-imagen-wrap{
+  position: relative;
+}
+
+.modal-etiqueta-fragancia{
+  position: absolute;
+  top: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(8, 26, 51, 0.78);
+  color: #fff;
+  font-size: clamp(0.82rem, 2.1vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  pointer-events: none;
+  display: none;
+  z-index: 2;
+}
+
+.modal-etiqueta-fragancia.activa{
+  display: inline-flex;
+}
+
+.modal-etiqueta-fragancia.pos-left{
+  left: 12px;
+  right: auto;
+}
+
+.modal-etiqueta-fragancia.pos-right{
+  right: 12px;
+  left: auto;
+}
+
 #modalCollage{
   display:none;
   position:fixed;
