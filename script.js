@@ -78,6 +78,9 @@ const PLACEHOLDER_BUSCADOR_NORMAL = "Buscar productos...";
 const PLACEHOLDER_BUSCADOR_DESCARGA = "Buscar imágenes...";
 const CLICKS_ACTIVACION_MAYOR = 7;
 const VENTANA_ACTIVACION_MAYOR_MS = 5000;
+const STORAGE_THEME_KEY = "catalogoTema";
+const THEME_LIGHT = "claro";
+const THEME_DARK = "nocturno";
 
 /* ================= FUNCIÓN GLOBAL: CERRAR MENÚ ================= */
 function cerrarMenu() {
@@ -91,8 +94,47 @@ function cerrarMenu() {
   if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
 }
 
+function aplicarTema(tema) {
+  const esModoNocturno = tema === THEME_DARK;
+  document.body.classList.toggle("modo-nocturno", esModoNocturno);
+
+  const themeToggle = document.getElementById("themeToggle");
+  const iconSun = document.querySelector(".theme-icon-sun");
+  const iconMoon = document.querySelector(".theme-icon-moon");
+
+  if (themeToggle) {
+    themeToggle.setAttribute("aria-pressed", String(esModoNocturno));
+    themeToggle.setAttribute(
+      "aria-label",
+      esModoNocturno ? "Cambiar a modo claro" : "Cambiar a modo nocturno"
+    );
+  }
+
+  if (iconSun && iconMoon) {
+    iconSun.style.display = esModoNocturno ? "none" : "block";
+    iconMoon.style.display = esModoNocturno ? "block" : "none";
+  }
+}
+
+function inicializarControlTema() {
+  const themeToggle = document.getElementById("themeToggle");
+  if (!themeToggle) return;
+
+  const temaGuardado = localStorage.getItem(STORAGE_THEME_KEY);
+  const temaInicial = temaGuardado === THEME_DARK ? THEME_DARK : THEME_LIGHT;
+  aplicarTema(temaInicial);
+
+  themeToggle.addEventListener("click", () => {
+    const temaActual = document.body.classList.contains("modo-nocturno") ? THEME_DARK : THEME_LIGHT;
+    const nuevoTema = temaActual === THEME_DARK ? THEME_LIGHT : THEME_DARK;
+    localStorage.setItem(STORAGE_THEME_KEY, nuevoTema);
+    aplicarTema(nuevoTema);
+  });
+}
+
 /* ================= INICIALIZAR ================= */
 document.addEventListener("DOMContentLoaded", () => {
+  inicializarControlTema();
   aplicarConfiguracionUI();
   restaurarSeleccion();
   actualizarContador();
